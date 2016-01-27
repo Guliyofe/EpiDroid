@@ -17,7 +17,7 @@ public class ApiIntra
     String mPassword;
 
     public ApiIntra()
-    {}
+    { }
 
     public boolean connectIntra(Context context)
     {
