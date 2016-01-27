@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">EpiDroid</string>
+
+    <!-- Debug Thingy -->
+    <string name="debug_output_login">OutputLogin : </string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Login</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sign_in_short">Connect</string>
+    <string name="error_invalid_email">This login is invalid</string>
+    <string name="http_login">https://epitech-api.herokuapp.com/login</string>
+    <string name="request_post">POST</string>
+    <string name="request_get">GET</string>
+    <string name="request_delete">DELETE</string>
+    <string name="string_login">login</string>
+    <string name="string_password">password</string>
+    <string name="string_equal">=</string>
+    <string name="string_esper">&amp;</string>
+    <string name="string_empty"></string>
+    <!-- <string name="error_invalid_password">This password is too short</string> -->
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+
+    <string name="title_activity_main">Accueil</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+</resources>
