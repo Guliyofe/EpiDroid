@@ -15,6 +15,10 @@ public class ApiIntra
     String token;
     String mLogin;
     String mPassword;
+
+    public ApiIntra()
+    {}
+
     public boolean connectIntra(Context context)
     {
         try
