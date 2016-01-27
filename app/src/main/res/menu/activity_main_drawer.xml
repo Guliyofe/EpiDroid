@@ -7,7 +7,7 @@
             android:icon="@drawable/ic_menu_camera"
             android:title="Home" />
         <item
-            android:id="@+id/nav_camera"
+            android:id="@+id/nav_schedule"
             android:icon="@drawable/ic_menu_camera"
             android:title="Schedule" />
         <item
