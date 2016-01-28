@@ -3,6 +3,10 @@ package com.raclettecorp.epidroid;
 import android.content.Context;
 import android.util.Log;
 
+import org.json.JSONObject;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -12,14 +16,31 @@ import javax.net.ssl.HttpsURLConnection;
  */
 public class ApiIntra
 {
-    String token;
+    String mtoken;
     String mLogin;
     String mPassword;
 
-    public ApiIntra()
-    { }
+    ApiIntraPlanning apiIntraPlanning;
 
-    public boolean connectIntra(Context context)
+    public ApiIntra()
+    {
+        apiIntraPlanning = new ApiIntraPlanning();
+        mtoken = null;
+    }
+
+    public String getMtoken() {
+        return mtoken;
+    }
+
+    public void setToken(String token) {
+        this.mtoken = token;
+    }
+
+    public ApiIntraPlanning getApiIntraPlanning() {
+        return apiIntraPlanning;
+    }
+
+    public String connectIntra(Context context, String login, String password)
     {
         try
         {
@@ -27,16 +48,40 @@ public class ApiIntra
 
             HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
             con.setRequestMethod(context.getString(R.string.request_post));
-            con.setRequestProperty(context.getString(R.string.string_login), mLogin);
-            con.setRequestProperty(context.getString(R.string.string_password), mPassword);
+            con.setRequestProperty(context.getString(R.string.string_login), login);
+            con.setRequestProperty(context.getString(R.string.string_password), password);
             con.setDoOutput(true);
             con.setDoInput(true);
-            return true;
+
+            DataOutputStream output = new DataOutputStream(con.getOutputStream());
+            output.writeBytes(context.getString(R.string.string_login)+ context.getString(R.string.string_equal) + login +
+                    context.getString(R.string.string_esper) + context.getString(R.string.string_password) + context.getString(R.string.string_equal) + password);
+            output.close();
+
+            DataInputStream input = new DataInputStream( con.getInputStream() );
+
+            String outputString = context.getString(R.string.string_empty);
+            for( int c = input.read(); c != -1; c = input.read() )
+                outputString += (char) c;
+            Log.d(context.getString(R.string.app_name), context.getString(R.string.debug_output_login) + outputString);
+            input.close();
+            if (con.getResponseCode() == 200)
+            {
+                JSONObject  jsonRootObject = new JSONObject(outputString);
+                String name = jsonRootObject.optString("token").toString();
+                String data = name;
+                mtoken = data;
+                return data;
+            }
+            else
+            {
+                return null;
+            }
         }
         catch (Exception e)
         {
             Log.d(context.getString(R.string.app_name), e.toString());
-            return false;
+            return null;
         }
     }
 

@@ -19,6 +19,8 @@
     <string name="string_equal">=</string>
     <string name="string_esper">&amp;</string>
     <string name="string_empty"></string>
+    <string name="string_api">API</string>
+
     <!-- <string name="error_invalid_password">This password is too short</string> -->
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
@@ -26,7 +28,9 @@
         completions."
     </string>
 
+    <!-- Strings related to planning -->
     <string name="title_activity_main">Accueil</string>
+    <string name="http_planning">https://epitech-api.herokuapp.com/planning</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

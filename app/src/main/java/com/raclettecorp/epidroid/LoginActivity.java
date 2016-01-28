@@ -61,11 +61,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private ApiIntra mApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        mApi = new ApiIntra();
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -174,7 +177,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password, this);
+            mAuthTask = new UserLoginTask(email, password, this, mApi);
             mAuthTask.execute((Void) null);
         }
     }
@@ -278,11 +281,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         private final String mLogin;
         private final String mPassword;
         private final Context mC;
+        private final ApiIntra mApi;
+        private String mToken;
 
-        UserLoginTask(String login, String password, Context c) {
+        UserLoginTask(String login, String password, Context c, ApiIntra api) {
             mLogin = login;
             mPassword = password;
             mC = c;
+            mApi = api;
+            mToken = null;
         }
 
         @Override
@@ -290,29 +297,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             try
             {
-                URL obj = new URL(getString(R.string.http_login));
-
-                HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-                con.setRequestMethod(getString(R.string.request_post));
-                con.setRequestProperty(getString(R.string.string_login), mLogin);
-                con.setRequestProperty(getString(R.string.string_password), mPassword);
-                con.setDoOutput(true);
-                con.setDoInput(true);
-
-                DataOutputStream output = new DataOutputStream(con.getOutputStream());
-                output.writeBytes(getString(R.string.string_login)+ getString(R.string.string_equal) + mLogin +
-                        getString(R.string.string_esper) + getString(R.string.string_password) + getString(R.string.string_equal) + mPassword);
-                output.close();
-
-                DataInputStream input = new DataInputStream( con.getInputStream() );
-
-                String outputString = getString(R.string.string_empty);
-                for( int c = input.read(); c != -1; c = input.read() )
-                    outputString += (char) c;
-                Log.d(getString(R.string.app_name), getString(R.string.debug_output_login) + outputString);
-                input.close();
-                if (con.getResponseCode() == 200)
-                    return true;
+                if ((mToken = mApi.connectIntra(mC, mLogin, mPassword)) == null)
+                    return false;
                 Thread.sleep(2000);
             }
             catch (Exception e)
@@ -335,6 +321,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if (success)
             {
                 android.content.Intent i = new android.content.Intent(mC, MainActivity.class);
+                i.putExtra(getString(R.string.string_api), mToken);
                 mC.startActivity(i);
             }
             else
