@@ -46,4 +46,9 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Related to info -->
+    <string name="http_infos">https://epitech-api.herokuapp.com/infos</string>
+    <string name="string_token">token</string>
+
 </resources>

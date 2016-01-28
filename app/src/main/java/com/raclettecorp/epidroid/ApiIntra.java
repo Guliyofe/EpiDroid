@@ -3,7 +3,9 @@ package com.raclettecorp.epidroid;
 import android.content.Context;
 import android.util.Log;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -48,8 +50,8 @@ public class ApiIntra
 
             HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
             con.setRequestMethod(context.getString(R.string.request_post));
-            con.setRequestProperty(context.getString(R.string.string_login), login);
-            con.setRequestProperty(context.getString(R.string.string_password), password);
+            con.setRequestProperty(context.getString(R.string.string_login), mLogin);
+            con.setRequestProperty(context.getString(R.string.string_password), mPassword);
             con.setDoOutput(true);
             con.setDoInput(true);
 
@@ -84,5 +86,23 @@ public class ApiIntra
             return null;
         }
     }
+
+    public JSONObject requestInfos(Context context)
+    {
+        try {
+            JSONObject jsonRootObject = new JSONObject("lol");
+            String name = jsonRootObject.optString("token").toString();
+            String data = name;
+            mtoken = data;
+            return jsonRootObject;
+        }
+        catch( Exception e)
+        {
+            Log.d(context.getString(R.string.app_name), e.toString());
+            return null;
+        }
+    }
+
+
 
 }
