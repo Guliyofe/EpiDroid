@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.Serializable;
 import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -16,9 +17,10 @@ import javax.net.ssl.HttpsURLConnection;
 /**
  * Class for managing requests to intra
  */
-public class ApiIntra
+public class ApiIntra implements Serializable
 {
-    String mtoken;
+    private static final long serialVersionUID = 1L;
+    String mToken;
     String mLogin;
     String mPassword;
 
@@ -27,15 +29,15 @@ public class ApiIntra
     public ApiIntra()
     {
         apiIntraPlanning = new ApiIntraPlanning();
-        mtoken = null;
+        mToken = null;
     }
 
-    public String getMtoken() {
-        return mtoken;
+    public String getMToken() {
+        return mToken;
     }
 
     public void setToken(String token) {
-        this.mtoken = token;
+        this.mToken = token;
     }
 
     public ApiIntraPlanning getApiIntraPlanning() {
@@ -72,7 +74,7 @@ public class ApiIntra
                 JSONObject  jsonRootObject = new JSONObject(outputString);
                 String name = jsonRootObject.optString("token").toString();
                 String data = name;
-                mtoken = data;
+                mToken = data;
                 return data;
             }
             else
@@ -96,12 +98,12 @@ public class ApiIntra
 
             HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
             con.setRequestMethod(context.getString(R.string.request_post));
-            con.setRequestProperty(context.getString(R.string.string_token), mtoken);
+            con.setRequestProperty(context.getString(R.string.string_token), mToken);
             con.setDoOutput(true);
             con.setDoInput(true);
 
             DataOutputStream output = new DataOutputStream(con.getOutputStream());
-            output.writeBytes(context.getString(R.string.string_token) + context.getString(R.string.string_equal) + mtoken);
+            output.writeBytes(context.getString(R.string.string_token) + context.getString(R.string.string_equal) + mToken);
             output.close();
 
             DataInputStream input = new DataInputStream( con.getInputStream() );
@@ -124,5 +126,7 @@ public class ApiIntra
         }
         return null;
     }
+
+
 
 }

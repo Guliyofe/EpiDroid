@@ -22,15 +22,17 @@ public class MainActivity extends AppCompatActivity implements ScheduleFragment.
     private NavigationView nvDrawer;
     private ActionBarDrawerToggle drawerToggle;
     private String mToken;
+    private ApiIntra mApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mApi = new ApiIntra();
 
         Intent i = getIntent();
         mToken = i.getStringExtra(getString(R.string.string_api));
-        Log.d("CAC", mToken);
+        mApi.setToken(mToken);
         
         // Set a Toolbar to replace the ActionBar.
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -47,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements ScheduleFragment.
         // Setup drawer view
         setupDrawerContent(nvDrawer);
 
-        Fragment fragment = HomeFragment.newInstance(getString(R.string.string_empty), getString(R.string.string_empty));
+        Fragment fragment = HomeFragment.newInstance(mApi);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
 
@@ -74,31 +76,27 @@ public class MainActivity extends AppCompatActivity implements ScheduleFragment.
         // Create a new fragment and specify the planet to show based on
         // position
         Fragment fragment = null;
-        Class fragmentClass;
 
-        switch(menuItem.getItemId()) {
-            case R.id.nav_home:
-                fragmentClass = HomeFragment.class;
-                break;
-            case R.id.nav_schedule:
-                fragmentClass = ScheduleFragment.class;
-                break;
-            case R.id.nav_modules:
-                fragmentClass = HomeFragment.class;
-                break;
-            case R.id.nav_profile:
-                fragmentClass = HomeFragment.class;
-                break;
-            case R.id.nav_trombi:
-                fragmentClass = HomeFragment.class;
-                break;
-            default:
-                fragmentClass = HomeFragment.class;
-        }
-
-        try
-        {
-            fragment = (Fragment) fragmentClass.newInstance();
+        try {
+            switch (menuItem.getItemId()) {
+                case R.id.nav_home:
+                    fragment = HomeFragment.newInstance(mApi);
+                    break;
+                case R.id.nav_schedule:
+                    fragment = ScheduleFragment.newInstance(mApi);
+                    break;
+                case R.id.nav_modules:
+                    fragment = HomeFragment.newInstance(mApi);
+                    break;
+                case R.id.nav_profile:
+                    fragment = HomeFragment.newInstance(mApi);
+                    break;
+                case R.id.nav_trombi:
+                    fragment = HomeFragment.newInstance(mApi);
+                    break;
+                default:
+                    fragment = HomeFragment.newInstance(mApi);
+            }
         }
         catch (Exception e)
         {
