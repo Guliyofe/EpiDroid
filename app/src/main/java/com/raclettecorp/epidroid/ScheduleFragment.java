@@ -2,12 +2,20 @@ package com.raclettecorp.epidroid;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
 import android.widget.TextView;
+
+import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 
 /**
@@ -18,13 +26,16 @@ import android.widget.TextView;
  * Use the {@link ScheduleFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ScheduleFragment extends Fragment {
+public class ScheduleFragment extends Fragment{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
 
     // TODO: Rename and change types of parameters
     private ApiIntra mParam1;
+    private PlanningTask mPlanningTask = null;
+    CalendarView mCalendar = null;
+    String mSelectedDate = null;
 
     private OnFragmentInteractionListener mListener;
 
@@ -43,7 +54,6 @@ public class ScheduleFragment extends Fragment {
     public static ScheduleFragment newInstance(ApiIntra param1) {
         ScheduleFragment fragment = new ScheduleFragment();
         Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
         args.putSerializable(ARG_PARAM1, param1);
         fragment.setArguments(args);
 
@@ -69,8 +79,31 @@ public class ScheduleFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        TextView output = (TextView) getView().findViewById(R.id.textView1);
-        output.setText(mParam1.getMToken());
+        mCalendar = (CalendarView) getView().findViewById(R.id.calendarView);
+        mCalendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener(){
+
+            @Override
+            public void onSelectedDayChange(CalendarView view, int year,
+                                            int month, int dayOfMonth) {
+                mListener.onFragmentInteraction(view);
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+                mSelectedDate = Integer.toString(year) + "-" + Integer.toString(month) + "-" + Integer.toString(dayOfMonth);
+                TextView output = (TextView) getView().findViewById(R.id.textView1);
+                output.setText(mSelectedDate);
+            }
+
+        });
+/*        mCalendar.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(Uri uri) {
+                        mListener.onFragmentInteraction(uri);
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+                        mSelectedDate = sdf.format(new Date(mCalendar.getDate()));
+                        TextView output = (TextView) getView().findViewById(R.id.textView1);
+                        output.setText(mSelectedDate);
+                    }
+                });*/
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -110,5 +143,62 @@ public class ScheduleFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(View view);
+    }
+
+    public class PlanningTask extends AsyncTask<Void, Void, Boolean> {
+        private final Context mC;
+        private final ApiIntra mApi;
+        private String mToken;
+
+        PlanningTask(Context c, ApiIntra api) {
+            mC = c;
+            mApi = api;
+            mToken = null;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+
+            try
+            {
+
+                Thread.sleep(2000);
+            }
+            catch (Exception e)
+            {
+                Log.d(getString(R.string.app_name), e.toString());
+                return false;
+            }
+
+
+
+            // TODO: register the new account here.
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            mPlanningTask = null;
+//            showProgress(false);
+
+            if (success)
+            {
+/*                android.content.Intent i = new android.content.Intent(mC, MainActivity.class);
+                i.putExtra(getString(R.string.string_api), mToken);
+                mC.startActivity(i);*/
+            }
+            else
+            {
+/*                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.requestFocus();*/
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mPlanningTask = null;
+//            showProgress(false);
+        }
     }
 }

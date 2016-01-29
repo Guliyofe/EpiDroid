@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 public class MainActivity extends AppCompatActivity implements ScheduleFragment.OnFragmentInteractionListener
 {
@@ -141,6 +142,11 @@ public class MainActivity extends AppCompatActivity implements ScheduleFragment.
 
     @Override
     public void onFragmentInteraction(Uri uri)
+    {
+    }
+
+    @Override
+    public void onFragmentInteraction(View view)
     {
     }
 }

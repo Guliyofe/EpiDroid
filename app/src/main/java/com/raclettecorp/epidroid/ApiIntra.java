@@ -19,7 +19,7 @@ import javax.net.ssl.HttpsURLConnection;
  */
 public class ApiIntra implements Serializable
 {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1350092881346723535L;
     String mToken;
     String mLogin;
     String mPassword;
