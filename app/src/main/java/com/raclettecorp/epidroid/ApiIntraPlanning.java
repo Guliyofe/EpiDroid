@@ -18,6 +18,7 @@ import javax.net.ssl.HttpsURLConnection;
 public class ApiIntraPlanning  implements Serializable {
     private static final long serialVersionUID = 8350092881346723535L;
 
+    private String mToken;
     private String prof_inst; // changer
     private String titlePlanning;
     private String rdv_indiv_registered;
@@ -57,8 +58,9 @@ public class ApiIntraPlanning  implements Serializable {
     private boolean past;
     private boolean module_available;
 
-    ApiIntraPlanning()
+    ApiIntraPlanning(String token)
     {
+        mToken = token;
         prof_inst = "";
         titlePlanning = "";
         rdv_indiv_registered = "";
@@ -99,43 +101,75 @@ public class ApiIntraPlanning  implements Serializable {
         module_available = false;
     }
 
-    public void getIntraPlanning(Context context)
+    public HttpsURLConnection getHttpsURLConnection(Context context, String urlString)
     {
         try
         {
-            URL obj = new URL(context.getString(R.string.http_login));
-
+            URL obj = new URL(urlString);
             HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-            con.setRequestMethod(context.getString(R.string.request_post));
-            con.setDoOutput(true);
+            return con;
+        }
+        catch( Exception e)
+        {
+            Log.d(context.getString(R.string.app_name), e.toString());
+            return null;
+        }
+    }
+
+    public String getResponseRequest(Context context, HttpsURLConnection con)
+    {
+        try
+        {
+            DataInputStream input = new DataInputStream(con.getInputStream());
+            String answer = context.getString(R.string.string_empty);
+            for( int c = input.read(); c != -1; c = input.read())
+                answer += (char) c;
+            input.close();
+            return answer;
+        }
+        catch( Exception e)
+        {
+            Log.d(context.getString(R.string.app_name), e.toString());
+            return null;
+        }
+    }
+
+    public String getIntraPlanning(Context context, String startDate, String endDate)
+    {
+        try
+        {
+            HttpsURLConnection con = this.getHttpsURLConnection(context, context.getString(R.string.http_planning) + "?" + context.getString(R.string.string_token) + context.getString(R.string.string_equal) + mToken
+                    + context.getString(R.string.string_esper) + context.getString(R.string.start_date_format)
+                    + context.getString(R.string.string_equal) + startDate + context.getString(R.string.string_esper) + context.getString(R.string.end_date_format)
+                    + context.getString(R.string.string_equal) + endDate);
             con.setDoInput(true);
 
-            DataOutputStream output = new DataOutputStream(con.getOutputStream());
-/*            output.writeBytes(context.getString(R.string.string_login)+ context.getString(R.string.string_equal) +
-                    context.getString(R.string.string_esper) + context.getString(R.string.string_password) + context.getString(R.string.string_equal));*/
-            output.close();
+//            String answer = this.getResponseRequest(context, con);
 
-            DataInputStream input = new DataInputStream( con.getInputStream() );
-
-            String outputString = context.getString(R.string.string_empty);
-            for( int c = input.read(); c != -1; c = input.read() )
-                outputString += (char) c;
-            Log.d(context.getString(R.string.app_name), context.getString(R.string.debug_output_login) + outputString);
+            DataInputStream input = new DataInputStream(con.getInputStream());
+            String answer = context.getString(R.string.string_empty);
+            for( int c = input.read(); c != -1; c = input.read())
+                answer += (char) c;
             input.close();
+
             if (con.getResponseCode() == 200)
             {
-                JSONObject jsonRootObject = new JSONObject(outputString);
-                String name = jsonRootObject.optString("token").toString();
-                String data = name;
+                JSONObject jsonRootObject = new JSONObject(answer);
+                String title = jsonRootObject.optString("acti_title").toString();
+                String toto = "Big Fail";
+                return toto;
+//                return title;
             }
             else
             {
-
+                String toto = "Big Fail";
+                return toto;
             }
         }
-        catch (Exception e)
+        catch( Exception e)
         {
             Log.d(context.getString(R.string.app_name), e.toString());
+            return null;
         }
     }
 

@@ -87,23 +87,13 @@ public class ScheduleFragment extends Fragment{
                                             int month, int dayOfMonth) {
                 mListener.onFragmentInteraction(view);
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-                mSelectedDate = Integer.toString(year) + "-" + Integer.toString(month) + "-" + Integer.toString(dayOfMonth);
+                mSelectedDate = Integer.toString(year) + "-" + "0" + Integer.toString(month + 1) + "-" + Integer.toString(dayOfMonth);
+//                mCalendar.setVisibility(View.INVISIBLE);
                 TextView output = (TextView) getView().findViewById(R.id.textView1);
-                output.setText(mSelectedDate);
+                output.setText(mParam1.getApiIntraPlanning().getIntraPlanning(getActivity(), mSelectedDate, mSelectedDate));
             }
 
         });
-/*        mCalendar.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(Uri uri) {
-                        mListener.onFragmentInteraction(uri);
-                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-                        mSelectedDate = sdf.format(new Date(mCalendar.getDate()));
-                        TextView output = (TextView) getView().findViewById(R.id.textView1);
-                        output.setText(mSelectedDate);
-                    }
-                });*/
     }
 
     // TODO: Rename method, update argument and hook method into UI event

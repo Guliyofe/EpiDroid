@@ -28,7 +28,6 @@ public class ApiIntra implements Serializable
 
     public ApiIntra()
     {
-        apiIntraPlanning = new ApiIntraPlanning();
         mToken = null;
     }
 
@@ -38,6 +37,7 @@ public class ApiIntra implements Serializable
 
     public void setToken(String token) {
         this.mToken = token;
+        apiIntraPlanning = new ApiIntraPlanning(mToken);
     }
 
     public ApiIntraPlanning getApiIntraPlanning() {
