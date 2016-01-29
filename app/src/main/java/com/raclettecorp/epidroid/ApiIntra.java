@@ -164,11 +164,16 @@ public class ApiIntra implements Serializable
             HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
             con.setRequestMethod(context.getString(R.string.request_post));
             con.setRequestProperty(context.getString(R.string.string_token), mToken);
+            con.setRequestProperty(context.getString(R.string.string_id), String.valueOf(id));
+            con.setRequestProperty(context.getString(R.string.string_id_calendar), String.valueOf(calendar_id));
             con.setDoOutput(true);
             con.setDoInput(true);
 
             DataOutputStream output = new DataOutputStream(con.getOutputStream());
             output.writeBytes(context.getString(R.string.string_token) + context.getString(R.string.string_equal) + mToken);
+            output.writeBytes(context.getString(R.string.string_id) + context.getString(R.string.string_equal) + String.valueOf(id));
+            output.writeBytes(context.getString(R.string.string_id_calendar) + context.getString(R.string.string_equal) + String.valueOf(calendar_id));
+
             output.close();
 
             DataInputStream input = new DataInputStream( con.getInputStream() );

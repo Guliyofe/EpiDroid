@@ -62,5 +62,7 @@
     <!-- Related to Susie -->
     <string name="http_susie">https://epitech-api.herokuapp.com/susie</string>
     <string name="string_susie">susie</string>
+    <string name="string_id">id</string>
+    <string name="string_id_calendar">id_calendar</string>
 
 </resources>
