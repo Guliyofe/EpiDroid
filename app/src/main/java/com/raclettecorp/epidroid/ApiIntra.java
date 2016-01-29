@@ -153,4 +153,42 @@ public class ApiIntra implements Serializable
         return null;
     }
 
+
+
+    public ApiIntraSusie requestSusie(Context context, int id, int calendar_id)
+    {
+        try
+        {
+            URL obj = new URL(context.getString(R.string.http_infos));
+
+            HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+            con.setRequestMethod(context.getString(R.string.request_post));
+            con.setRequestProperty(context.getString(R.string.string_token), mToken);
+            con.setDoOutput(true);
+            con.setDoInput(true);
+
+            DataOutputStream output = new DataOutputStream(con.getOutputStream());
+            output.writeBytes(context.getString(R.string.string_token) + context.getString(R.string.string_equal) + mToken);
+            output.close();
+
+            DataInputStream input = new DataInputStream( con.getInputStream() );
+
+            String answer = context.getString(R.string.string_empty);
+            for( int c = input.read(); c != -1; c = input.read() )
+                answer += (char) c;
+            input.close();
+            if (con.getResponseCode() == 200) {
+                ApiIntraSusie susie = new ApiIntraSusie(new JSONObject((answer)));
+                Log.d(context.getString(R.string.app_name), context.getString(R.string.debug_api_infos_done));
+                return susie;
+            }
+        }
+        catch( Exception e)
+        {
+            Log.d(context.getString(R.string.app_name), e.toString());
+            return null;
+        }
+        return null;
+    }
+
 }

@@ -5,6 +5,8 @@
     <string name="debug_output_login">OutputLogin : </string>
     <string name="debug_output_infos">OutputInfos : </string>
     <string name="debug_api_infos_done">ApiInfos Done</string>
+    <string name="debug_api_susie_done">ApiSusie Done</string>
+
 
     <!-- Drawer Thingy -->
     <string name="drawer_home">Home</string>
@@ -56,5 +58,9 @@
     <!-- Related to User -->
     <string name="http_user">https://epitech-api.herokuapp.com/user</string>
     <string name="string_user">user</string>
+
+    <!-- Related to Susie -->
+    <string name="http_susie">https://epitech-api.herokuapp.com/susie</string>
+    <string name="string_susie">susie</string>
 
 </resources>
