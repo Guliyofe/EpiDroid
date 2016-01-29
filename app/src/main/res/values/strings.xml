@@ -3,6 +3,8 @@
 
     <!-- Debug Thingy -->
     <string name="debug_output_login">OutputLogin : </string>
+    <string name="debug_output_infos">OutputInfos : </string>
+    <string name="debug_api_infos_done">ApiInfos Done</string>
 
     <!-- Drawer Thingy -->
     <string name="drawer_home">Home</string>
@@ -51,5 +53,8 @@
     <string name="http_infos">https://epitech-api.herokuapp.com/infos</string>
     <string name="string_token">token</string>
 
+    <!-- Related to User -->
+    <string name="http_user">https://epitech-api.herokuapp.com/user</string>
+    <string name="string_user">user</string>
 
 </resources>

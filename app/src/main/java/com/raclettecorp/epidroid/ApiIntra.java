@@ -71,11 +71,9 @@ public class ApiIntra implements Serializable
             input.close();
             if (con.getResponseCode() == 200)
             {
-                JSONObject  jsonRootObject = new JSONObject(outputString);
-                String name = jsonRootObject.optString("token").toString();
-                String data = name;
-                mToken = data;
-                return data;
+                JSONObject jsonRootObject = new JSONObject(outputString);
+                mToken = jsonRootObject.optString("token").toString();
+                return mToken;
             }
             else
             {
@@ -89,9 +87,8 @@ public class ApiIntra implements Serializable
         }
     }
 
-    public JSONObject requestInfos(Context context)
+    public ApiIntraInfos requestInfos(Context context)
     {
-        String answer;
         try
         {
             URL obj = new URL(context.getString(R.string.http_infos));
@@ -108,15 +105,14 @@ public class ApiIntra implements Serializable
 
             DataInputStream input = new DataInputStream( con.getInputStream() );
 
-            String outputString = context.getString(R.string.string_empty);
+            String answer = context.getString(R.string.string_empty);
             for( int c = input.read(); c != -1; c = input.read() )
-                outputString += (char) c;
-            Log.d(context.getString(R.string.app_name), context.getString(R.string.debug_output_login) + outputString);
+                answer += (char) c;
             input.close();
             if (con.getResponseCode() == 200) {
-                JSONObject jsonObjectInfos = new JSONObject("Response");
-                String name = jsonObjectInfos.optString("token").toString();
-                return jsonObjectInfos;
+                ApiIntraInfos infos = new ApiIntraInfos(new JSONObject((answer)));
+                Log.d(context.getString(R.string.app_name), context.getString(R.string.debug_api_infos_done));
+                return infos;
             }
         }
         catch( Exception e)
@@ -127,6 +123,34 @@ public class ApiIntra implements Serializable
         return null;
     }
 
+    public ApiIntraUser requestUser(Context context, String login)
+    {
+        try
+        {
+            URL obj = new URL(context.getString(R.string.http_user) + "?" + context.getString(R.string.string_token) + context.getString(R.string.string_equal) + mToken
+                    + context.getString(R.string.string_esper) + context.getString(R.string.string_user)
+                    + context.getString(R.string.string_equal) + login);
+            HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+            con.setDoInput(true);
 
+            DataInputStream input = new DataInputStream( con.getInputStream() );
+            String answer = context.getString(R.string.string_empty);
+            for( int c = input.read(); c != -1; c = input.read() )
+                answer += (char) c;
+            input.close();
+
+            if (con.getResponseCode() == 200) {
+                ApiIntraUser user = new ApiIntraUser(new JSONObject((answer)));
+                Log.d(context.getString(R.string.app_name), "lol : " + user.getUser().getCredits());
+                return user;
+            }
+        }
+        catch( Exception e)
+        {
+            Log.d(context.getString(R.string.app_name), e.toString());
+            return null;
+        }
+        return null;
+    }
 
 }

@@ -2,18 +2,22 @@ package com.raclettecorp.epidroid;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.test.suitebuilder.annotation.LargeTest;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 
 /**
  * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link HomeFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
+ * Activities that contain this fragment must implement the*/
+ // {@link HomeFragment.OnFragmentInteractionListener} interface
+ /* to handle interaction events.
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
@@ -22,8 +26,12 @@ public class HomeFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
 
-    // TODO: Rename and change types of parameters
+    private GetInfosTask minfosTask = null;
     private ApiIntra mParam1;
+
+    private TextView _firstNameView = null;
+    private TextView _lastNameView = null;
+    private TextView _loginView = null;
 
     private ScheduleFragment.OnFragmentInteractionListener mListener;
 
@@ -52,6 +60,8 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = (ApiIntra) getArguments().getSerializable(ARG_PARAM1);
+            minfosTask = new GetInfosTask(getActivity(), mParam1);
+            minfosTask.execute((Void) null);
         }
     }
 
@@ -62,12 +72,20 @@ public class HomeFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        _firstNameView = (TextView) getView().findViewById(R.id.textFirstNameView);
+        _lastNameView = (TextView) getView().findViewById(R.id.textLastNameView);
+        _loginView = (TextView) getView().findViewById(R.id.textLoginView);
+    }
+
+    /* TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
-    }
+    }*/
 
     @Override
     public void onAttach(Context context) {
@@ -86,5 +104,111 @@ public class HomeFragment extends Fragment {
         mListener = null;
     }
 
+    public class GetInfosTask extends AsyncTask<Void, Void, Boolean>
+    {
+
+        private final Context _context;
+        private final ApiIntra _api;
+        private ApiIntraInfos _infos;
+
+        GetInfosTask(Context c, ApiIntra api)
+        {
+            _context = c;
+            _api = api;
+            _infos = null;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params)
+        {
+            try
+            {
+                if ((_infos = _api.requestInfos(_context)) == null)
+                    return false;
+            }
+            catch (Exception e) {
+                Log.d(getString(R.string.app_name), e.toString());
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success)
+        {
+
+            if (success)
+            {
+                _loginView.setText(_infos.getInfos().getLogin());
+                _lastNameView.setText(_infos.getInfos().getLastName());
+                _firstNameView.setText(_infos.getInfos().getFirstName());
+                GetUserTask userTask = new GetUserTask(_context, _api, _infos.getInfos().getLogin());
+                userTask.execute((Void) null);
+                return;
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        @Override
+        protected void onCancelled()
+        {
+
+        }
+    }
+
+    public class GetUserTask extends AsyncTask<Void, Void, Boolean>
+    {
+
+        private final Context _context;
+        private final ApiIntra _api;
+        private final String _login;
+        private Object _infos;
+
+        GetUserTask(Context c, ApiIntra api, String login)
+        {
+            _context = c;
+            _api = api;
+            _login = login;
+            _infos = null;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params)
+        {
+            try
+            {
+                if ((_infos = _api.requestUser(_context, _login)) == null)
+                    return false;
+            }
+            catch (Exception e) {
+                Log.d(getString(R.string.app_name), e.toString());
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success)
+        {
+
+            if (success)
+            {
+                return;
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        @Override
+        protected void onCancelled()
+        {
+
+        }
+    }
 
 }

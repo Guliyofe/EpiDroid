@@ -5,4 +5,28 @@
     tools:context="com.raclettecorp.epidroid.HomeFragment">
 
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="LastName"
+        android:id="@+id/textLastNameView"
+        android:layout_gravity="left|top" />
+
+    <TextView
+        android:layout_width="119dp"
+        android:layout_height="42dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="FirstName"
+        android:id="@+id/textFirstNameView"
+        android:layout_gravity="center_horizontal|top" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="login"
+        android:id="@+id/textLoginView"
+        android:layout_gravity="right|top" />
+
 </FrameLayout>
