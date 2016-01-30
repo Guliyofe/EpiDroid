@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements ScheduleFragment.
         // Setup drawer view
         setupDrawerContent(nvDrawer);
 
+
         Fragment fragment = HomeFragment.newInstance(mApi);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();

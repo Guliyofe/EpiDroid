@@ -21,10 +21,19 @@
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Connect</string>
     <string name="error_invalid_email">This login is invalid</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
     <string name="http_login">https://epitech-api.herokuapp.com/login</string>
+
+    <!-- Related to request -->
     <string name="request_post">POST</string>
     <string name="request_get">GET</string>
     <string name="request_delete">DELETE</string>
+
+    <!-- Related to nothing -->
     <string name="string_login">login</string>
     <string name="string_password">password</string>
     <string name="string_equal">=</string>
@@ -32,12 +41,6 @@
     <string name="string_empty"></string>
     <string name="string_api">API</string>
 
-    <!-- <string name="error_invalid_password">This password is too short</string> -->
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
 
     <!-- Strings related to planning -->
     <string name="title_activity_main">Accueil</string>
@@ -56,6 +59,9 @@
     <!-- Related to info -->
     <string name="http_infos">https://epitech-api.herokuapp.com/infos</string>
     <string name="string_token">token</string>
+    <string name="gpa_infos">GPA : </string>
+    <string name="log_infos_start">Log :&#32;</string>
+    <string name="log_infos_middle"> &lt; </string>
 
     <!-- Related to User -->
     <string name="http_user">https://epitech-api.herokuapp.com/user</string>

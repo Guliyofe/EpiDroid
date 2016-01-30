@@ -29,4 +29,28 @@
         android:id="@+id/textLoginView"
         android:layout_gravity="right|top" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="GPA : 4.2"
+        android:id="@+id/textGpaView"
+        android:layout_gravity="left|center_vertical" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Log : 4.2"
+        android:id="@+id/textLogView"
+        android:layout_gravity="right|center_vertical" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressInfosBar"
+        android:layout_gravity="center"
+        android:indeterminate="false" />
+
 </FrameLayout>

@@ -3,6 +3,7 @@ package com.raclettecorp.epidroid;
 import android.content.Context;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -111,7 +112,14 @@ public class ApiIntra implements Serializable
             input.close();
             if (con.getResponseCode() == 200) {
                 ApiIntraInfos infos = new ApiIntraInfos(new JSONObject((answer)));
-                Log.d(context.getString(R.string.app_name), context.getString(R.string.debug_api_infos_done));
+                //Log.d(context.getString(R.string.app_name), context.getString(R.string.debug_api_infos_done));
+                JSONObject lol = new JSONObject(answer);
+                JSONArray lolo = lol.optJSONArray("history");
+                for (int i = 0; i < lolo.length(); i++)
+                {
+                    Log.d(context.getString(R.string.app_name), "swag : " + lolo.optJSONObject(i));
+                }
+                //Log.d(context.getString(R.string.app_name), "swag : " + lolo.toString());
                 return infos;
             }
         }

@@ -299,7 +299,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             {
                 if ((mToken = mApi.connectIntra(mC, mLogin, mPassword)) == null)
                     return false;
-                Thread.sleep(2000);
             }
             catch (Exception e)
             {

@@ -1,19 +1,34 @@
 package com.raclettecorp.epidroid;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
 
-/**
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+
+/*
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the*/
  // {@link HomeFragment.OnFragmentInteractionListener} interface
@@ -32,6 +47,10 @@ public class HomeFragment extends Fragment {
     private TextView _firstNameView = null;
     private TextView _lastNameView = null;
     private TextView _loginView = null;
+    private TextView _gpaView = null;
+    private TextView _logView = null;
+    private View _progressView = null;
+    private View _headerView = null;
 
     private ScheduleFragment.OnFragmentInteractionListener mListener;
 
@@ -78,14 +97,49 @@ public class HomeFragment extends Fragment {
         _firstNameView = (TextView) getView().findViewById(R.id.textFirstNameView);
         _lastNameView = (TextView) getView().findViewById(R.id.textLastNameView);
         _loginView = (TextView) getView().findViewById(R.id.textLoginView);
+        _gpaView = (TextView) getView().findViewById(R.id.textGpaView);
+        _logView = (TextView) getView().findViewById(R.id.textLogView);
+        _progressView = getView().findViewById(R.id.progressInfosBar);
+        _headerView = ((NavigationView)getActivity().findViewById(R.id.nvView)).getHeaderView(0);
+        showProgress(true);
     }
 
-    /* TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2)
+        {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            _logView.setVisibility(show ? View.GONE : View.VISIBLE);
+            _gpaView.setVisibility(show ? View.GONE : View.VISIBLE);
+            _firstNameView.setVisibility(show ? View.GONE : View.VISIBLE);
+            _lastNameView.setVisibility(show ? View.GONE : View.VISIBLE);
+            _loginView.setVisibility(show ? View.GONE : View.VISIBLE);
+
+            _progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            _progressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    _progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
         }
-    }*/
+        else
+        {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            _progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            _logView.setVisibility(show ? View.GONE : View.VISIBLE);
+            _gpaView.setVisibility(show ? View.GONE : View.VISIBLE);
+            _firstNameView.setVisibility(show ? View.GONE : View.VISIBLE);
+            _lastNameView.setVisibility(show ? View.GONE : View.VISIBLE);
+            _loginView.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -165,14 +219,14 @@ public class HomeFragment extends Fragment {
         private final Context _context;
         private final ApiIntra _api;
         private final String _login;
-        private Object _infos;
+        private ApiIntraUser _user;
 
         GetUserTask(Context c, ApiIntra api, String login)
         {
             _context = c;
             _api = api;
             _login = login;
-            _infos = null;
+            _user = null;
         }
 
         @Override
@@ -180,7 +234,7 @@ public class HomeFragment extends Fragment {
         {
             try
             {
-                if ((_infos = _api.requestUser(_context, _login)) == null)
+                if ((_user = _api.requestUser(_context, _login)) == null)
                     return false;
             }
             catch (Exception e) {
@@ -196,6 +250,14 @@ public class HomeFragment extends Fragment {
 
             if (success)
             {
+                if (isAdded())
+                {
+                    new ImageLoadTask(_user.getUser().getPicture(), (ImageView) _headerView.findViewById(R.id.photoProfile)).execute();
+                    ((TextView) _headerView.findViewById(R.id.loginProfile)).setText(_user.getUser().getLogin());
+                    _gpaView.setText(getString(R.string.gpa_infos) + _user.getGpa(0).getGpa());
+                    _logView.setText(getString(R.string.log_infos_start) + _user.getNs().getActive());
+                    showProgress(false);
+                }
                 return;
             }
             else
@@ -209,6 +271,41 @@ public class HomeFragment extends Fragment {
         {
 
         }
+    }
+
+    public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
+
+        private String url;
+        private ImageView imageView;
+
+        public ImageLoadTask(String url, ImageView imageView) {
+            this.url = url;
+            this.imageView = imageView;
+        }
+
+        @Override
+        protected Bitmap doInBackground(Void... params) {
+            try {
+                URL urlConnection = new URL(url);
+                HttpURLConnection connection = (HttpURLConnection) urlConnection
+                        .openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                Bitmap myBitmap = BitmapFactory.decodeStream(input);
+                return myBitmap;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            super.onPostExecute(result);
+            imageView.setImageBitmap(result);
+        }
+
     }
 
 }
