@@ -4,59 +4,89 @@
     android:layout_height="match_parent"
     tools:context="com.raclettecorp.epidroid.HomeFragment">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="LastName"
-        android:id="@+id/textLastNameView"
-        android:layout_gravity="left|top" />
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            tools:background="@drawable/ic_person_24dp"
+            android:id="@+id/imageInfosView" />
 
-    <TextView
-        android:layout_width="119dp"
-        android:layout_height="42dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="FirstName"
-        android:id="@+id/textFirstNameView"
-        android:layout_gravity="center_horizontal|top" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold"
+            android:text="LastName"
+            android:id="@+id/textLastNameView"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/textFirstNameView"
+            android:layout_toEndOf="@+id/textFirstNameView" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="login"
-        android:id="@+id/textLoginView"
-        android:layout_gravity="right|top" />
+        <TextView
+            android:layout_width="119dp"
+            android:layout_height="42dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="FirstName"
+            android:id="@+id/textFirstNameView"
+            android:layout_toRightOf="@+id/imageInfosView"
+            android:layout_alignTop="@+id/imageInfosView"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="GPA : 4.2"
-        android:id="@+id/textGpaView"
-        android:layout_gravity="left|center_vertical" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="login"
+            android:id="@+id/textLoginView"
+            android:layout_below="@+id/textFirstNameView"
+            android:layout_alignLeft="@+id/textFirstNameView"
+            android:layout_alignStart="@+id/textFirstNameView" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Log : 4.2"
-        android:id="@+id/textLogView"
-        android:layout_gravity="right|center_vertical" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="GPA : 4.2"
+            android:id="@+id/textGpaView"
+            android:layout_gravity="left|center_vertical"
+            android:layout_below="@+id/textLogView"
+            android:layout_alignRight="@+id/imageInfosView"
+            android:layout_alignEnd="@+id/imageInfosView" />
 
-    <ProgressBar
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/progressInfosBar"
-        android:layout_gravity="center"
-        android:indeterminate="false" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Log : 4.2"
+            android:id="@+id/textLogView"
+            android:layout_gravity="right|center_vertical"
+            android:layout_below="@+id/imageInfosView"
+            android:layout_alignRight="@+id/textGpaView"
+            android:layout_alignEnd="@+id/textGpaView" />
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="180dp"
-        android:id="@+id/listHistoryView"
-        android:layout_gravity="center_horizontal|bottom" />
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressInfosBar"
+            android:layout_gravity="center"
+            android:indeterminate="false"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="180dp"
+            android:id="@+id/listHistoryView"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textGpaView" />
+
+    </RelativeLayout>
+
 
 </FrameLayout>

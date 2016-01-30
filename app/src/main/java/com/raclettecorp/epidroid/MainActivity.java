@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements ScheduleFragment.
                     fragment = ScheduleFragment.newInstance(mApi);
                     break;
                 case R.id.nav_modules:
-                    fragment = HomeFragment.newInstance(mApi);
+                    fragment = ModulesFragment.newInstance(mApi);
                     break;
                 case R.id.nav_profile:
                     fragment = HomeFragment.newInstance(mApi);

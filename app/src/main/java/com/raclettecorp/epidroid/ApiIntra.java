@@ -113,7 +113,6 @@ public class ApiIntra implements Serializable
             if (con.getResponseCode() == 200) {
                 ApiIntraInfos infos = new ApiIntraInfos(new JSONObject((answer)));
                 Log.d(context.getString(R.string.app_name), context.getString(R.string.debug_api_infos_done));
-                Log.d(context.getString(R.string.app_name), "swag : " + infos.getHistory()[0].getUser().getTitle());
                 return infos;
             }
         }
@@ -155,7 +154,34 @@ public class ApiIntra implements Serializable
         return null;
     }
 
+    public ApiIntraModules requestModules(Context context)
+    {
+        try
+        {
+            Log.d("EpiDroid" , "start modules");
+            URL obj = new URL(context.getString(R.string.http_modules) + "?" + context.getString(R.string.string_token) + context.getString(R.string.string_equal) + mToken);
+            HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+            con.setDoInput(true);
 
+            DataInputStream input = new DataInputStream( con.getInputStream() );
+            String answer = context.getString(R.string.string_empty);
+            for( int c = input.read(); c != -1; c = input.read() )
+                answer += (char) c;
+            input.close();
+            if (con.getResponseCode() == 200)
+            {
+                ApiIntraModules modules = new ApiIntraModules(new JSONObject((answer)));
+                Log.d(context.getString(R.string.app_name), "Modules : " + modules.getModules()[0].getGrade());
+                return modules;
+            }
+        }
+        catch( Exception e)
+        {
+            Log.d(context.getString(R.string.app_name), e.toString());
+            return null;
+        }
+        return null;
+    }
 
     public ApiIntraSusie requestSusie(Context context, int id, int calendar_id)
     {

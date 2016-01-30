@@ -52,6 +52,7 @@ public class HomeFragment extends Fragment {
     private TextView _gpaView = null;
     private TextView _logView = null;
     private ListView _historyView = null;
+    private ImageView _imageProfileView = null;
     private View _progressView = null;
     private View _headerView = null;
 
@@ -104,6 +105,7 @@ public class HomeFragment extends Fragment {
         _logView = (TextView) getView().findViewById(R.id.textLogView);
         _progressView = getView().findViewById(R.id.progressInfosBar);
         _historyView = (ListView) getView().findViewById(R.id.listHistoryView);
+        _imageProfileView = (ImageView) getView().findViewById(R.id.imageInfosView);
         _headerView = ((NavigationView)getActivity().findViewById(R.id.nvView)).getHeaderView(0);
         showProgress(true);
     }
@@ -264,6 +266,7 @@ public class HomeFragment extends Fragment {
                 if (isAdded())
                 {
                     new ImageLoadTask(_user.getUser().getPicture(), (ImageView) _headerView.findViewById(R.id.photoProfile)).execute();
+                    new ImageLoadTask(_user.getUser().getPicture(), _imageProfileView).execute();
                     ((TextView) _headerView.findViewById(R.id.loginProfile)).setText(_user.getUser().getLogin());
                     _gpaView.setText(getString(R.string.gpa_infos) + _user.getGpa(0).getGpa());
                     _logView.setText(getString(R.string.log_infos_start) + _user.getNs().getActive());

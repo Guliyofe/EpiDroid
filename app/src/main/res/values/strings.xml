@@ -68,6 +68,9 @@
     <string name="string_user">user</string>
 
     <!-- Related to Susie -->
+    <string name="http_modules">https://epitech-api.herokuapp.com/modules</string>
+
+    <!-- Related to Susie -->
     <string name="http_susie">https://epitech-api.herokuapp.com/susie</string>
     <string name="string_susie">susie</string>
     <string name="string_id">id</string>
