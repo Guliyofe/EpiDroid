@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -26,6 +27,7 @@ import org.w3c.dom.Text;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
 
 
 /*
@@ -49,6 +51,7 @@ public class HomeFragment extends Fragment {
     private TextView _loginView = null;
     private TextView _gpaView = null;
     private TextView _logView = null;
+    private ListView _historyView = null;
     private View _progressView = null;
     private View _headerView = null;
 
@@ -100,6 +103,7 @@ public class HomeFragment extends Fragment {
         _gpaView = (TextView) getView().findViewById(R.id.textGpaView);
         _logView = (TextView) getView().findViewById(R.id.textLogView);
         _progressView = getView().findViewById(R.id.progressInfosBar);
+        _historyView = (ListView) getView().findViewById(R.id.listHistoryView);
         _headerView = ((NavigationView)getActivity().findViewById(R.id.nvView)).getHeaderView(0);
         showProgress(true);
     }
@@ -118,6 +122,7 @@ public class HomeFragment extends Fragment {
             _firstNameView.setVisibility(show ? View.GONE : View.VISIBLE);
             _lastNameView.setVisibility(show ? View.GONE : View.VISIBLE);
             _loginView.setVisibility(show ? View.GONE : View.VISIBLE);
+            _historyView.setVisibility(show ? View.GONE : View.VISIBLE);
 
             _progressView.setVisibility(show ? View.VISIBLE : View.GONE);
             _progressView.animate().setDuration(shortAnimTime).alpha(
@@ -138,6 +143,7 @@ public class HomeFragment extends Fragment {
             _firstNameView.setVisibility(show ? View.GONE : View.VISIBLE);
             _lastNameView.setVisibility(show ? View.GONE : View.VISIBLE);
             _loginView.setVisibility(show ? View.GONE : View.VISIBLE);
+            _historyView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 
@@ -193,11 +199,16 @@ public class HomeFragment extends Fragment {
 
             if (success)
             {
-                _loginView.setText(_infos.getInfos().getLogin());
-                _lastNameView.setText(_infos.getInfos().getLastName());
-                _firstNameView.setText(_infos.getInfos().getFirstName());
-                GetUserTask userTask = new GetUserTask(_context, _api, _infos.getInfos().getLogin());
-                userTask.execute((Void) null);
+                if (isAdded())
+                {
+                    _loginView.setText(_infos.getInfos().getLogin());
+                    _lastNameView.setText(_infos.getInfos().getLastName());
+                    _firstNameView.setText(_infos.getInfos().getFirstName());
+                    HistoryAdapter historyAdapter = new HistoryAdapter(getActivity(), Arrays.asList(_infos.getHistory()));
+                    _historyView.setAdapter(historyAdapter);
+                    GetUserTask userTask = new GetUserTask(_context, _api, _infos.getInfos().getLogin());
+                    userTask.execute((Void) null);
+                }
                 return;
             }
             else
@@ -273,7 +284,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    public class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
+    public static class ImageLoadTask extends AsyncTask<Void, Void, Bitmap> {
 
         private String url;
         private ImageView imageView;

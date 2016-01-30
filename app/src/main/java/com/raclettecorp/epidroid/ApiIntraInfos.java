@@ -1,5 +1,8 @@
 package com.raclettecorp.epidroid;
 
+import android.util.Log;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -8,6 +11,7 @@ public class ApiIntraInfos
     private final String _ip;
     private Infos _infos;
     private Current _current;
+    private History[] _history;
 
     ApiIntraInfos(JSONObject answer)
     {
@@ -28,6 +32,16 @@ public class ApiIntraInfos
         {
             _current = null;
         }
+        doHistoryThingy(answer.optJSONArray("history"));
+    }
+
+    public void doHistoryThingy(JSONArray history)
+    {
+        _history = new History[history.length()];
+        for (int i = 0; i < history.length(); i++)
+        {
+            _history[i] = new History(history.optJSONObject(i));
+        }
     }
 
     public String getIp()
@@ -43,5 +57,10 @@ public class ApiIntraInfos
     public Current getCurrent()
     {
         return _current;
+    }
+
+    public History[] getHistory()
+    {
+        return _history;
     }
 }

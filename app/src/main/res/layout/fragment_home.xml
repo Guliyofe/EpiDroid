@@ -53,4 +53,10 @@
         android:layout_gravity="center"
         android:indeterminate="false" />
 
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="180dp"
+        android:id="@+id/listHistoryView"
+        android:layout_gravity="center_horizontal|bottom" />
+
 </FrameLayout>
