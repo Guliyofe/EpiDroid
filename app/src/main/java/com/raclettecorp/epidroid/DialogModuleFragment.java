@@ -1,14 +1,23 @@
 package com.raclettecorp.epidroid;
 
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class DialogModuleFragment extends DialogFragment
 {
@@ -21,12 +30,16 @@ public class DialogModuleFragment extends DialogFragment
     private TextView _endView;
     private TextView _gradeView;
     private Button _shareButton;
+    private Button _subButton;
+    private Button _unsubButton;
     private ApiIntraModule _module;
+    private ApiIntra _api;
 
-    public static DialogModuleFragment newInstance(ApiIntraModule module) {
+    public static DialogModuleFragment newInstance(ApiIntraModule module, ApiIntra api) {
         DialogModuleFragment dialog = new DialogModuleFragment();
         Bundle args = new Bundle();
         args.putSerializable("module", module);
+        args.putSerializable("api", api);
         dialog.setArguments(args);
         return dialog;
     }
@@ -37,7 +50,10 @@ public class DialogModuleFragment extends DialogFragment
         View v = inflater.inflate(R.layout.dialog_module, container, false);
 
         if (getArguments() != null)
+        {
             _module = (ApiIntraModule) getArguments().getSerializable("module");
+            _api = (ApiIntra) getArguments().getSerializable("api");
+        }
         _titleView = (TextView) v.findViewById(R.id.textTitleViewModule);
         _titleView.setText(_module.getCodeModule());
         _descriptionView = (TextView) v.findViewById(R.id.textDescriptionViewModule);
@@ -63,9 +79,107 @@ public class DialogModuleFragment extends DialogFragment
                 startActivity(Intent.createChooser(sharingIntent, "Share via"));
             }
         });
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        try
+        {
+            Date nowDate = new Date();
+            Date beginDate = df.parse(_module.getBegin());
+            Date endDate = df.parse(_module.getEndRegister());
+            _subButton = (Button) v.findViewById(R.id.buttonSubModule);
+            if (nowDate.compareTo(beginDate) > 0 && nowDate.compareTo(endDate) < 0)
+                _subButton.setVisibility(View.VISIBLE);
+            else
+                _subButton.setVisibility(View.GONE);
+            _subButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    //new UnsubModuleTask(getActivity(), _api, _module.getScolarYear(), _module.getCodeModule(), _module.getCodeInstance()).execute();
+                }
+            });
+            _unsubButton = (Button) v.findViewById(R.id.buttonUnsubModule);
+            if (nowDate.compareTo(beginDate) > 0 && nowDate.compareTo(endDate) < 0)
+                _unsubButton.setVisibility(View.VISIBLE);
+            else
+                _unsubButton.setVisibility(View.GONE);
+            _unsubButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    new UnsubModuleTask(getActivity(), _api, _module.getScolarYear(), _module.getCodeModule(), _module.getCodeInstance()).execute();
+                }
+            });
+        }
+        catch (Exception e)
+        {
+            Log.d(getString(R.string.app_name), e.toString());
+        }
 
         getDialog().setTitle(_module.getTitle());
 
         return v;
+    }
+
+    public class UnsubModuleTask extends AsyncTask<Void, Void, Boolean>
+    {
+
+        private final Context _context;
+        private final ApiIntra _api;
+        private final String _scolarYear;
+        private final String _codeModule;
+        private final String _codeInstance;
+
+        UnsubModuleTask(Context c, ApiIntra api, String scolarYear, String codeModule, String codeInstance)
+        {
+            _context = c;
+            _api = api;
+            _module = null;
+            _scolarYear = scolarYear;
+            _codeInstance = codeInstance;
+            _codeModule = codeModule;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params)
+        {
+            try
+            {
+                _api.unsubModule(_context, _scolarYear, _codeModule, _codeInstance);
+                return true;
+            }
+            catch (Exception e) {
+                Log.d(getString(R.string.app_name), e.toString());
+                return false;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success)
+        {
+
+            if (success)
+            {
+                if (isAdded())
+                {
+                    new AlertDialog.Builder(getActivity())
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setTitle(R.string.string_unsub)
+                            .setPositiveButton(R.string.alert_dialog_ok,
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog,
+                                                            int whichButton) {
+
+                                        }
+                                    }).create().show();
+                }
+                return;
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        @Override
+        protected void onCancelled()
+        {
+
+        }
     }
 }

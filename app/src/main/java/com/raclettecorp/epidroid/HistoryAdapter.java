@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.net.URLDecoder;
 import java.util.List;
 
 public class HistoryAdapter extends ArrayAdapter<History>
@@ -37,9 +38,8 @@ public class HistoryAdapter extends ArrayAdapter<History>
 
         History history = getItem(position);
 
-        viewHolder.title.setText(history.getTitle());
-        viewHolder.content.setText(history.getContent());
-        //viewHolder.avatar.setImageDrawable(new ColorDrawable(tweet.getColor()));
+        viewHolder.title.setText(android.text.Html.fromHtml(history.getTitle()));
+        viewHolder.content.setText(android.text.Html.fromHtml(history.getContent()));
         Log.d("EpiDroid", history.getUser().getPicture());
         if (history.getUser().getPicture() != "null")
             new HomeFragment.ImageLoadTask(history.getUser().getPicture(), viewHolder.avatar).execute();

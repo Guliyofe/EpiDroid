@@ -107,8 +107,11 @@ public class ApiIntra implements Serializable
             DataInputStream input = new DataInputStream( con.getInputStream() );
 
             String answer = context.getString(R.string.string_empty);
-            for( int c = input.read(); c != -1; c = input.read() )
-                answer += (char) c;
+            String lol;
+            while ((lol = input.readLine()) != null)
+                answer += lol;
+            /*for( int c = input.read(); c != -1; c = input.read() )
+                answer += (char) c;*/
             input.close();
             if (con.getResponseCode() == 200) {
                 ApiIntraInfos infos = new ApiIntraInfos(new JSONObject((answer)));
@@ -136,8 +139,11 @@ public class ApiIntra implements Serializable
 
             DataInputStream input = new DataInputStream( con.getInputStream() );
             String answer = context.getString(R.string.string_empty);
-            for( int c = input.read(); c != -1; c = input.read() )
-                answer += (char) c;
+            String lol;
+            while ((lol = input.readLine()) != null)
+                answer += lol;
+            /*for( int c = input.read(); c != -1; c = input.read() )
+                answer += (char) c;*/
             input.close();
 
             if (con.getResponseCode() == 200) {
@@ -163,8 +169,11 @@ public class ApiIntra implements Serializable
 
             DataInputStream input = new DataInputStream( con.getInputStream() );
             String answer = context.getString(R.string.string_empty);
-            for( int c = input.read(); c != -1; c = input.read() )
-                answer += (char) c;
+            String lol;
+            while ((lol = input.readLine()) != null)
+                answer += lol;
+            /*for( int c = input.read(); c != -1; c = input.read() )
+                answer += (char) c;*/
             input.close();
             if (con.getResponseCode() == 200)
             {
@@ -193,8 +202,11 @@ public class ApiIntra implements Serializable
 
             DataInputStream input = new DataInputStream( con.getInputStream() );
             String answer = context.getString(R.string.string_empty);
-            for( int c = input.read(); c != -1; c = input.read() )
-                answer += (char) c;
+            String lol;
+            while ((lol = input.readLine()) != null)
+                answer += lol;
+            /*for( int c = input.read(); c != -1; c = input.read() )
+                answer += (char) c;*/
             input.close();
             if (con.getResponseCode() == 200)
             {
@@ -209,6 +221,45 @@ public class ApiIntra implements Serializable
             return null;
         }
         return null;
+    }
+
+    public Boolean unsubModule(Context context, String scolarYear, String codeModule, String codeInstance)
+    {
+        try
+        {
+            URL obj = new URL(context.getString(R.string.http_module));
+            HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+            con.setRequestMethod(context.getString(R.string.request_delete));
+            con.setRequestProperty(context.getString(R.string.string_token), mToken);
+            con.setRequestProperty(context.getString(R.string.string_scolar_year), scolarYear);
+            con.setRequestProperty(context.getString(R.string.string_code_module), codeModule);
+            con.setRequestProperty(context.getString(R.string.string_code_instance), codeInstance);
+            con.setDoOutput(true);
+            con.setDoInput(true);
+
+            DataOutputStream output = new DataOutputStream(con.getOutputStream());
+            output.writeBytes(context.getString(R.string.string_token) + context.getString(R.string.string_equal) + mToken
+                    + context.getString(R.string.string_esper) + context.getString(R.string.string_scolar_year) + context.getString(R.string.string_equal) + scolarYear
+                    + context.getString(R.string.string_esper) + context.getString(R.string.string_code_module) + context.getString(R.string.string_equal) + codeModule
+                    + context.getString(R.string.string_esper) + context.getString(R.string.string_code_instance) + context.getString(R.string.string_equal) + codeInstance);
+            output.close();
+
+            DataInputStream input = new DataInputStream( con.getInputStream() );
+
+            String answer = context.getString(R.string.string_empty);
+            for( int c = input.read(); c != -1; c = input.read() )
+                answer += (char) c;
+            input.close();
+            if (con.getResponseCode() == 200) {
+                return true;
+            }
+        }
+        catch( Exception e)
+        {
+            Log.d(context.getString(R.string.app_name), e.toString());
+            return false;
+        }
+        return false;
     }
 
     public ApiIntraSusie requestSusie(Context context, int id, int calendar_id)

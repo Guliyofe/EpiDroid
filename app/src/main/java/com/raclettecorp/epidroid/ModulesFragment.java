@@ -283,7 +283,7 @@ public class ModulesFragment extends Fragment
             {
                 if (isAdded())
                 {
-                    DialogModuleFragment dialogModule = new DialogModuleFragment().newInstance(_module);
+                    DialogModuleFragment dialogModule = new DialogModuleFragment().newInstance(_module, mParam1);
                     //FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                     dialogModule.show(getActivity().getSupportFragmentManager(), "fuckYou");
                     /*ModuleAdapter moduleAdapter = new ModuleAdapter(getActivity(), Arrays.asList(_modules.getModules()));

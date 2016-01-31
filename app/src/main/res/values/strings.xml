@@ -78,6 +78,7 @@
     <string name="string_begin_module">Begin : </string>
     <string name="string_end_module">End : </string>
     <string name="string_end_register_module">End register : </string>
+    <string name="string_unsub">Unsubscribe</string>
 
 
     <!-- Related to Susie -->
@@ -85,5 +86,6 @@
     <string name="string_susie">susie</string>
     <string name="string_id">id</string>
     <string name="string_id_calendar">id_calendar</string>
+    <string name="alert_dialog_ok">OK</string>
 
 </resources>
