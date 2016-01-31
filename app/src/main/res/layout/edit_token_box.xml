@@ -7,6 +7,6 @@
         android:id="@+id/enter_token"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter your token"
+        android:hint="@string/token"
         android:inputType="number"/>
 </LinearLayout>

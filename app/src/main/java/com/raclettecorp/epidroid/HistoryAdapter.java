@@ -38,7 +38,7 @@ public class HistoryAdapter extends ArrayAdapter<History>
 
         viewHolder.title.setText(android.text.Html.fromHtml(history.getTitle()));
         viewHolder.content.setText(android.text.Html.fromHtml(history.getContent()));
-        if (history.getUser().getPicture().equals("null"))
+        if (history.getUser().getPicture() != "null")
             new HomeFragment.ImageLoadTask(history.getUser().getPicture(), viewHolder.avatar).execute();
         else
             viewHolder.avatar.setImageResource(R.drawable.ic_person_24dp);

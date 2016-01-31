@@ -53,7 +53,12 @@
     <string name="credits">Credits</string>
     <string name="gpa">GPA : 4.2</string>
     <string name="log">Log : 42</string>
-
+    <string name="token">Enter your token</string>
+    <string name="activity">Activity</string>
+    <string name="activitytitle">Activity Title</string>
+    <string name="begin_activity">Begin Activity : ?</string>
+    <string name="end_activity">End Activity : ?</string>
+    <string name="room">In room : ?</string>
 
     <!-- Strings related to planning -->
     <string name="title_activity_main">Accueil</string>
