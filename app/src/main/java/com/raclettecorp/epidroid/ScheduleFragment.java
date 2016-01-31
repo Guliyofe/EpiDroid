@@ -1,18 +1,32 @@
 package com.raclettecorp.epidroid;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
-import android.widget.TextView;
+import android.widget.ListView;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,13 +37,16 @@ import java.text.SimpleDateFormat;
  * create an instance of this fragment.
  */
 public class ScheduleFragment extends Fragment{
+    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
 
+    // TODO: Rename and change types of parameters
     private ApiIntra mParam1;
     private PlanningTask mPlanningTask = null;
     CalendarView mCalendar = null;
     String mSelectedDate = null;
+    private View _progressView = null;
 
     private OnFragmentInteractionListener mListener;
 
@@ -44,6 +61,7 @@ public class ScheduleFragment extends Fragment{
      * @param param1 Parameter 1.
      * @return A new instance of fragment ScheduleFragment.
      */
+    // TODO: Rename and change types and number of parameters
     public static ScheduleFragment newInstance(ApiIntra param1) {
         ScheduleFragment fragment = new ScheduleFragment();
         Bundle args = new Bundle();
@@ -72,6 +90,8 @@ public class ScheduleFragment extends Fragment{
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        _progressView = getView().findViewById(R.id.progressScheduleBar);
+        _progressView.setVisibility(View.INVISIBLE);
         mCalendar = (CalendarView) getView().findViewById(R.id.calendarView);
         mCalendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener(){
 
@@ -80,15 +100,49 @@ public class ScheduleFragment extends Fragment{
                                             int month, int dayOfMonth) {
                 mListener.onFragmentInteraction(view);
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-                mSelectedDate = Integer.toString(year) + "-" + "0" + Integer.toString(month + 1) + "-" + Integer.toString(dayOfMonth);
-//                mCalendar.setVisibility(View.INVISIBLE);
-                TextView output = (TextView) getView().findViewById(R.id.textView1);
-                output.setText(mParam1.getApiIntraPlanning().getIntraPlanning(getActivity(), mSelectedDate, mSelectedDate));
+                mSelectedDate = Integer.toString(year) + "-" + "0"
+                        + Integer.toString(month + 1)
+                        + "-" + Integer.toString(dayOfMonth);
+                showProgress(true);
+                mPlanningTask = new PlanningTask(getActivity(), mParam1, mSelectedDate);
+                mPlanningTask.execute((Void) null);
             }
 
         });
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2)
+        {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            _progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            _progressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    _progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        }
+        else
+        {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            _progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
+        }
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -118,6 +172,7 @@ public class ScheduleFragment extends Fragment{
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
         void onFragmentInteraction(View view);
     }
@@ -125,12 +180,14 @@ public class ScheduleFragment extends Fragment{
     public class PlanningTask extends AsyncTask<Void, Void, Boolean> {
         private final Context mC;
         private final ApiIntra mApi;
-        private String mToken;
+        private final String mSelectedDate;
+        private PlanningList mPlanningList;
 
-        PlanningTask(Context c, ApiIntra api) {
+        PlanningTask(Context c, ApiIntra api, String selectedDate) {
             mC = c;
             mApi = api;
-            mToken = null;
+            mSelectedDate = selectedDate;
+            mPlanningList = null;
         }
 
         @Override
@@ -138,7 +195,7 @@ public class ScheduleFragment extends Fragment{
 
             try
             {
-
+                mPlanningList = new PlanningList(mApi.getApiIntraPlanning().getIntraPlanning(getActivity(), mSelectedDate, mSelectedDate));
                 Thread.sleep(2000);
             }
             catch (Exception e)
@@ -147,31 +204,47 @@ public class ScheduleFragment extends Fragment{
                 return false;
             }
 
+
+
+            // TODO: register the new account here.
             return true;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
             mPlanningTask = null;
-//            showProgress(false);
-
             if (success)
             {
-/*                android.content.Intent i = new android.content.Intent(mC, MainActivity.class);
-                i.putExtra(getString(R.string.string_api), mToken);
-                mC.startActivity(i);*/
-            }
-            else
+                try {
+                    mPlanningList.getmListPlanning().get(0).get_acti_title();
+                }
+                catch (Exception e)
+                {
+                    new android.support.v7.app.AlertDialog.Builder(getActivity())
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setTitle("No activity !")
+                            .setPositiveButton(R.string.alert_dialog_ok,
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog,
+                                                            int whichButton) {
+                                        }
+                                    }).create().show();
+                    showProgress(false);
+                    return;
+                }
+                DialogSheduleFragment dialogSchedule = new DialogSheduleFragment().newInstance(mPlanningList);
+                dialogSchedule.show(getActivity().getSupportFragmentManager(), "plop");
+                showProgress(false);
+                return;
+            } else
             {
-/*                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();*/
+                return;
             }
         }
 
         @Override
         protected void onCancelled() {
             mPlanningTask = null;
-//            showProgress(false);
         }
     }
 }

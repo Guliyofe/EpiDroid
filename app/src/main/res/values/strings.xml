@@ -107,4 +107,9 @@
     <string name="string_id_calendar">id_calendar</string>
     <string name="alert_dialog_ok">OK</string>
 
+    <!-- Related to validation token -->
+    <string name="http_token">https://epitech-api.herokuapp.com/token</string>
+    <string name="string_code_event">codeevent</string>
+    <string name="string_token_validation_code">tokenvalidationcode</string>
+    <string name="string_token_validated">tokenvalidationcode</string>
 </resources>
