@@ -2,21 +2,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.raclettecorp.epidroid.ModulesFragment">
-
+    tools:context="com.raclettecorp.epidroid.ProjectsFragment">
 
     <ProgressBar
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/progressModulesBar"
+        android:id="@+id/progressProjectsBar"
         android:layout_gravity="center"
         android:indeterminate="false" />
 
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/listModulesView"
+        android:id="@+id/listProjectsView"
         android:layout_gravity="center" />
 
 </FrameLayout>

@@ -2,7 +2,6 @@ package com.raclettecorp.epidroid;
 
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.net.URLDecoder;
 import java.util.List;
 
 public class HistoryAdapter extends ArrayAdapter<History>
@@ -40,8 +38,7 @@ public class HistoryAdapter extends ArrayAdapter<History>
 
         viewHolder.title.setText(android.text.Html.fromHtml(history.getTitle()));
         viewHolder.content.setText(android.text.Html.fromHtml(history.getContent()));
-        Log.d("EpiDroid", history.getUser().getPicture());
-        if (history.getUser().getPicture() != "null")
+        if (history.getUser().getPicture().equals("null"))
             new HomeFragment.ImageLoadTask(history.getUser().getPicture(), viewHolder.avatar).execute();
         else
             viewHolder.avatar.setImageResource(R.drawable.ic_person_24dp);

@@ -28,17 +28,17 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/year"
-        android:id="@+id/textYearViewModules"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:id="@+id/textYearViewProjects" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/year"
-        android:id="@+id/textDateViewModules"
+        android:text="@string/code"
+        android:id="@+id/textCodeViewProjects"
         android:layout_alignTop="@+id/textModuleViewProjects"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
@@ -46,23 +46,21 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/grade"
-        android:id="@+id/textGradeViewModules"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/string_begin_module"
+        android:id="@+id/textBeginViewProjects"
         android:layout_below="@+id/textModuleViewProjects"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textColor="@android:color/holo_blue_light" />
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/credits"
-        android:id="@+id/textCreditsViewModules"
-        android:layout_below="@+id/textDateViewModules"
-        android:layout_alignRight="@+id/textDateViewModules"
-        android:layout_alignEnd="@+id/textDateViewModules"
-        android:textColor="@android:color/holo_blue_dark" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/end_date_format"
+        android:id="@+id/textEndViewProjects"
+        android:layout_below="@+id/textBeginViewProjects"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

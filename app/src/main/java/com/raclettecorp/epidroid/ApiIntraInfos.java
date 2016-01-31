@@ -1,6 +1,5 @@
 package com.raclettecorp.epidroid;
 
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,10 +14,10 @@ public class ApiIntraInfos
 
     ApiIntraInfos(JSONObject answer)
     {
-        _ip = answer.optString("ip").toString();
+        _ip = answer.optString("ip");
         try
         {
-            _infos = new Infos(new JSONObject(answer.optString("infos").toString()));
+            _infos = new Infos(new JSONObject(answer.optString("infos")));
         }
         catch (JSONException e)
         {
@@ -26,7 +25,7 @@ public class ApiIntraInfos
         }
         try
         {
-            _current = new Current(new JSONObject(answer.optString("current").toString()));
+            _current = new Current(new JSONObject(answer.optString("current")));
         }
         catch (JSONException e)
         {

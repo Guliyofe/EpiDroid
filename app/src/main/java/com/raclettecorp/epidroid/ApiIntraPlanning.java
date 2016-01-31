@@ -6,15 +6,12 @@ import android.util.Log;
 import org.json.JSONObject;
 
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.Serializable;
 import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
-/**
- * Created by Théophile on 27/01/2016.
- */
+
 public class ApiIntraPlanning  implements Serializable {
     private static final long serialVersionUID = 8350092881346723535L;
 
@@ -155,7 +152,7 @@ public class ApiIntraPlanning  implements Serializable {
             if (con.getResponseCode() == 200)
             {
                 JSONObject jsonRootObject = new JSONObject(answer);
-                String title = jsonRootObject.optString("acti_title").toString();
+                String title = jsonRootObject.optString("acti_title");
                 String toto = "Big Fail";
                 return toto;
 //                return title;

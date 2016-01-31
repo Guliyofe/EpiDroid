@@ -8,9 +8,6 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.Locale;
 
-/**
- * Created by bertrand on 29/01/16.
- */
 
 public class ApiIntraSusie
 {

@@ -13,7 +13,7 @@
     <string name="drawer_schedule">Schedule</string>
     <string name="drawer_trombi">Trombi</string>
     <string name="drawer_modules">Modules</string>
-    <string name="drawer_profile">Profile</string>
+    <string name="drawer_projects">Projects</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Login</string>
@@ -40,6 +40,19 @@
     <string name="string_esper">&amp;</string>
     <string name="string_empty"></string>
     <string name="string_api">API</string>
+    <string name="title">Title</string>
+    <string name="module">Module</string>
+    <string name="lastname">Last Name</string>
+    <string name="description">Description</string>
+    <string name="year">2016</string>
+    <string name="firstname">First Name</string>
+    <string name="competence">Competence</string>
+    <string name="inscription">Inscription</string>
+    <string name="code">Code</string>
+    <string name="grade">Grade</string>
+    <string name="credits">Credits</string>
+    <string name="gpa">GPA : 4.2</string>
+    <string name="log">Log : 42</string>
 
 
     <!-- Strings related to planning -->
@@ -53,7 +66,6 @@
 
     <string name="action_settings">Settings</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- Related to info -->
@@ -79,7 +91,14 @@
     <string name="string_end_module">End : </string>
     <string name="string_end_register_module">End register : </string>
     <string name="string_unsub">Unsubscribe</string>
+    <string name="string_sub">Subscribe</string>
 
+    <!-- Related to Projects -->
+    <string name="http_projects">https://epitech-api.herokuapp.com/projects</string>
+
+    <!-- Related to Project -->
+    <string name="http_project">https://epitech-api.herokuapp.com/project</string>
+    <string name="string_code_acti">codeacti</string>
 
     <!-- Related to Susie -->
     <string name="http_susie">https://epitech-api.herokuapp.com/susie</string>

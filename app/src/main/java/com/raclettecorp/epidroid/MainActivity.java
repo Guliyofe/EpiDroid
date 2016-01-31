@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.util.Log;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -90,8 +89,8 @@ public class MainActivity extends AppCompatActivity implements ScheduleFragment.
                 case R.id.nav_modules:
                     fragment = ModulesFragment.newInstance(mApi);
                     break;
-                case R.id.nav_profile:
-                    fragment = HomeFragment.newInstance(mApi);
+                case R.id.nav_projects:
+                    fragment = ProjectsFragment.newInstance(mApi);
                     break;
                 case R.id.nav_trombi:
                     fragment = HomeFragment.newInstance(mApi);

@@ -18,19 +18,19 @@ import android.widget.ListView;
 import java.util.Arrays;
 
 
-public class ModulesFragment extends Fragment
+public class ProjectsFragment extends Fragment
 {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
 
     private ApiIntra mParam1;
 
-    private ListView _modulesView;
+    private ListView _projectsView;
     private View _progressView;
 
     private ScheduleFragment.OnFragmentInteractionListener mListener;
 
-    public ModulesFragment() {
+    public ProjectsFragment() {
         // Required empty public constructor
     }
 
@@ -39,10 +39,10 @@ public class ModulesFragment extends Fragment
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
-     * @return A new instance of fragment ModulesFragment.
+     * @return A new instance of fragment ProjectsFragment.
      */
-    public static ModulesFragment newInstance(ApiIntra param1) {
-        ModulesFragment fragment = new ModulesFragment();
+    public static ProjectsFragment newInstance(ApiIntra param1) {
+        ProjectsFragment fragment = new ProjectsFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_PARAM1, param1);
         fragment.setArguments(args);
@@ -61,27 +61,26 @@ public class ModulesFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_modules, container, false);
+        return inflater.inflate(R.layout.fragment_projects, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        _modulesView = (ListView) getView().findViewById(R.id.listModulesView);
-        _modulesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        _projectsView = (ListView) getView().findViewById(R.id.listProjectsView);
+        _projectsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3)
             {
-                Module module = (Module) _modulesView.getItemAtPosition(position);
-                showProgressOneModule(true);
-                new GetModuleTask(getActivity(), mParam1, String.valueOf(module.getScholarYear()), module.getCodeModule(), module.getCodeInstance(), module.getGrade()).execute();
-
+                ApiIntraProjects.Project project = (ApiIntraProjects.Project) _projectsView.getItemAtPosition(position);
+                showProgressOneProject(true);
+                new GetProjectTask(getActivity(), mParam1, project.getScolarYear(), project.getCodeModule(), project.getCodeInstance(), project.getCodeActi()).execute();
             }
 
         });
-        _progressView = getView().findViewById(R.id.progressModulesBar);
-        new GetModulesTask(getActivity(), mParam1).execute();
+        _progressView = getView().findViewById(R.id.progressProjectsBar);
+        new GetProjectsTask(getActivity(), mParam1).execute();
         showProgress(true);
     }
 
@@ -94,7 +93,7 @@ public class ModulesFragment extends Fragment
         {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            _modulesView.setVisibility(show ? View.GONE : View.VISIBLE);
+            _projectsView.setVisibility(show ? View.GONE : View.VISIBLE);
 
             _progressView.setVisibility(show ? View.VISIBLE : View.GONE);
             _progressView.animate().setDuration(shortAnimTime).alpha(
@@ -110,12 +109,12 @@ public class ModulesFragment extends Fragment
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
             _progressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            _modulesView.setVisibility(show ? View.GONE : View.VISIBLE);
+            _projectsView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgressOneModule(final boolean show) {
+    private void showProgressOneProject(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
@@ -157,18 +156,18 @@ public class ModulesFragment extends Fragment
         mListener = null;
     }
 
-    public class GetModulesTask extends AsyncTask<Void, Void, Boolean>
+    public class GetProjectsTask extends AsyncTask<Void, Void, Boolean>
     {
 
         private final Context _context;
         private final ApiIntra _api;
-        private ApiIntraModules _modules;
+        private ApiIntraProjects _projects;
 
-        GetModulesTask(Context c, ApiIntra api)
+        GetProjectsTask(Context c, ApiIntra api)
         {
             _context = c;
             _api = api;
-            _modules = null;
+            _projects = null;
         }
 
         @Override
@@ -176,7 +175,7 @@ public class ModulesFragment extends Fragment
         {
             try
             {
-                if ((_modules = _api.requestModules(_context)) == null)
+                if ((_projects = _api.requestProjects(_context)) == null)
                     return false;
             }
             catch (Exception e) {
@@ -190,19 +189,12 @@ public class ModulesFragment extends Fragment
         protected void onPostExecute(final Boolean success)
         {
 
-            if (success)
-            {
-                if (isAdded())
-                {
-                    ModuleAdapter moduleAdapter = new ModuleAdapter(getActivity(), Arrays.asList(_modules.getModules()));
-                    _modulesView.setAdapter(moduleAdapter);
+            if (success) {
+                if (isAdded()) {
+                    ProjectAdapter projectAdapter = new ProjectAdapter(getActivity(), Arrays.asList(_projects.getProjects()));
+                    _projectsView.setAdapter(projectAdapter);
                     showProgress(false);
                 }
-                return;
-            }
-            else
-            {
-                return;
             }
         }
 
@@ -213,7 +205,7 @@ public class ModulesFragment extends Fragment
         }
     }
 
-    public class GetModuleTask extends AsyncTask<Void, Void, Boolean>
+    public class GetProjectTask extends AsyncTask<Void, Void, Boolean>
     {
 
         private final Context _context;
@@ -221,18 +213,18 @@ public class ModulesFragment extends Fragment
         private final String _scolarYear;
         private final String _codeModule;
         private final String _codeInstance;
-        private final String _grade;
-        private ApiIntraModule _module;
+        private final String _codeActi;
+        private ApiIntraProject _project;
 
-        GetModuleTask(Context c, ApiIntra api, String scolarYear, String codeModule, String codeInstance, String grade)
+        GetProjectTask(Context c, ApiIntra api, String scolarYear, String codeModule, String codeInstance, String codeActi)
         {
             _context = c;
             _api = api;
-            _module = null;
+            _project = null;
             _scolarYear = scolarYear;
             _codeInstance = codeInstance;
             _codeModule = codeModule;
-            _grade = grade;
+            _codeActi = codeActi;
         }
 
         @Override
@@ -240,7 +232,7 @@ public class ModulesFragment extends Fragment
         {
             try
             {
-                if ((_module = _api.requestModule(_context, _scolarYear, _codeModule, _codeInstance, _grade)) == null)
+                if ((_project = _api.requestProject(_context, _scolarYear, _codeModule, _codeInstance, _codeActi)) == null)
                     return false;
             }
             catch (Exception e) {
@@ -254,18 +246,12 @@ public class ModulesFragment extends Fragment
         protected void onPostExecute(final Boolean success)
         {
 
-            if (success)
-            {
-                if (isAdded())
-                {
-                    DialogModuleFragment dialogModule = new DialogModuleFragment().newInstance(_module, mParam1);
-                    dialogModule.show(getActivity().getSupportFragmentManager(), "fuckYou");
-                    showProgressOneModule(false);
+            if (success) {
+                if (isAdded()) {
+                    DialogProjectFragment dialogProject = new DialogProjectFragment().newInstance(_project, mParam1);
+                    dialogProject.show(getActivity().getSupportFragmentManager(), "fuckYou");
+                    showProgressOneProject(false);
                 }
-                return;
-            }
-            else
-            {
                 return;
             }
         }
@@ -276,4 +262,5 @@ public class ModulesFragment extends Fragment
 
         }
     }
+
 }

@@ -15,30 +15,24 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-public class DialogModuleFragment extends DialogFragment
+public class DialogProjectFragment extends DialogFragment
 {
-
     private TextView _titleView;
     private TextView _descriptionView;
-    private TextView _competenceView;
     private TextView _beginView;
     private TextView _endRegisterView;
     private TextView _endView;
-    private TextView _gradeView;
     private Button _shareButton;
     private Button _subButton;
     private Button _unsubButton;
-    private ApiIntraModule _module;
+
+    private ApiIntraProject _project;
     private ApiIntra _api;
 
-    public static DialogModuleFragment newInstance(ApiIntraModule module, ApiIntra api) {
-        DialogModuleFragment dialog = new DialogModuleFragment();
+    public static DialogProjectFragment newInstance(ApiIntraProject project, ApiIntra api) {
+        DialogProjectFragment dialog = new DialogProjectFragment();
         Bundle args = new Bundle();
-        args.putSerializable("module", module);
+        args.putSerializable("project", project);
         args.putSerializable("api", api);
         dialog.setArguments(args);
         return dialog;
@@ -47,76 +41,58 @@ public class DialogModuleFragment extends DialogFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View v = inflater.inflate(R.layout.dialog_module, container, false);
+        View v = inflater.inflate(R.layout.dialog_project, container, false);
 
-        if (getArguments() != null)
-        {
-            _module = (ApiIntraModule) getArguments().getSerializable("module");
+        if (getArguments() != null) {
+            _project = (ApiIntraProject) getArguments().getSerializable("project");
             _api = (ApiIntra) getArguments().getSerializable("api");
         }
+
         _titleView = (TextView) v.findViewById(R.id.textTitleViewProject);
-        _titleView.setText(_module.getCodeModule());
+        _titleView.setText(_project.getModuleTitle());
         _descriptionView = (TextView) v.findViewById(R.id.textDescriptionViewProject);
-        _descriptionView.setText(_module.getDescription());
-        _competenceView = (TextView) v.findViewById(R.id.textCompetenceViewModule);
-        _competenceView.setText(_module.getCompetence());
+        _descriptionView.setText(_project.getDescription());
         _beginView = (TextView) v.findViewById(R.id.textBeginViewProject);
-        _beginView.setText(getString(R.string.string_begin_module) + _module.getBegin());
+        _beginView.setText(getString(R.string.string_begin_module) + _project.getBegin());
         _endRegisterView = (TextView) v.findViewById(R.id.textEndRegisterViewProject);
-        _endRegisterView.setText(getString(R.string.string_end_register_module) + _module.getEndRegister());
+        _endRegisterView.setText(getString(R.string.string_end_register_module) + _project.getEndRegistered());
         _endView = (TextView) v.findViewById(R.id.textEndViewProject);
-        _endView.setText(getString(R.string.string_end_module) + _module.getEnd());
-        _gradeView = (TextView) v.findViewById(R.id.textGradeViewModule);
-        _gradeView.setText(_module.getGrade());
+        _endView.setText(getString(R.string.string_end_module) + _project.getEnd());
         _shareButton = (Button) v.findViewById(R.id.buttonShareProject);
         _shareButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
-                String shareBody = "I've got an " + _module.getGrade() + " in " + _module.getTitle();
-                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Hi, want to see my grade ?");
+                String shareBody;
+                Log.d("Registered", _project.getRegistered().toString());
+                if (_project.getRegistered()) {
+                    shareBody = "I'm doing " + _project.getTitle() + " and you ?";
+                } else {
+                    shareBody = "You know " + _project.getTitle() + " ?";
+                }
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Hi, do you know " + _project.getTitle() + " ?");
                 sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
                 startActivity(Intent.createChooser(sharingIntent, "Share via"));
             }
         });
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        try
-        {
-            Date nowDate = new Date();
-            Date beginDate = df.parse(_module.getBegin());
-            Date endDate = df.parse(_module.getEndRegister());
-            _subButton = (Button) v.findViewById(R.id.buttonSubProject);
-            if (nowDate.compareTo(beginDate) > 0 && nowDate.compareTo(endDate) < 0)
-                _subButton.setVisibility(View.VISIBLE);
-            else
-                _subButton.setVisibility(View.GONE);
-            _subButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    new SubModuleTask(getActivity(), _api, _module.getScolarYear(), _module.getCodeModule(), _module.getCodeInstance()).execute();
-                }
-            });
-            _unsubButton = (Button) v.findViewById(R.id.buttonUnsubModule);
-            if (nowDate.compareTo(beginDate) > 0 && nowDate.compareTo(endDate) < 0)
-                _unsubButton.setVisibility(View.VISIBLE);
-            else
-                _unsubButton.setVisibility(View.GONE);
-            _unsubButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    new UnsubModuleTask(getActivity(), _api, _module.getScolarYear(), _module.getCodeModule(), _module.getCodeInstance()).execute();
-                }
-            });
-        }
-        catch (Exception e)
-        {
-            Log.d(getString(R.string.app_name), e.toString());
-        }
-
-        getDialog().setTitle(_module.getTitle());
+        _subButton = (Button) v.findViewById(R.id.buttonSubProject);
+        _subButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                new SubProjectTask(getActivity(), _api, _project.getScolarYear(), _project.getCodeModule(), _project.getCodeInstance(), _project.getCodeActi()).execute();
+            }
+        });
+        _unsubButton = (Button) v.findViewById(R.id.buttonUnsubProject);
+        _unsubButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                new UnsubProjectTask(getActivity(), _api, _project.getScolarYear(), _project.getCodeModule(), _project.getCodeInstance(), _project.getCodeActi()).execute();
+            }
+        });
+        getDialog().setTitle(_project.getTitle());
 
         return v;
     }
 
-    public class UnsubModuleTask extends AsyncTask<Void, Void, Boolean>
+    public class UnsubProjectTask extends AsyncTask<Void, Void, Boolean>
     {
 
         private final Context _context;
@@ -124,15 +100,16 @@ public class DialogModuleFragment extends DialogFragment
         private final String _scolarYear;
         private final String _codeModule;
         private final String _codeInstance;
+        private final String _codeActi;
 
-        UnsubModuleTask(Context c, ApiIntra api, String scolarYear, String codeModule, String codeInstance)
+        UnsubProjectTask(Context c, ApiIntra api, String scolarYear, String codeModule, String codeInstance, String codeActi)
         {
             _context = c;
             _api = api;
-            _module = null;
             _scolarYear = scolarYear;
             _codeInstance = codeInstance;
             _codeModule = codeModule;
+            _codeActi = codeActi;
         }
 
         @Override
@@ -140,7 +117,7 @@ public class DialogModuleFragment extends DialogFragment
         {
             try
             {
-                _api.unsubModule(_context, _scolarYear, _codeModule, _codeInstance);
+                _api.unsubProject(_context, _scolarYear, _codeModule, _codeInstance, _codeActi);
                 return true;
             }
             catch (Exception e) {
@@ -153,10 +130,8 @@ public class DialogModuleFragment extends DialogFragment
         protected void onPostExecute(final Boolean success)
         {
 
-            if (success)
-            {
-                if (isAdded())
-                {
+            if (success) {
+                if (isAdded()) {
                     new AlertDialog.Builder(getActivity())
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .setTitle(R.string.string_unsub)
@@ -178,7 +153,7 @@ public class DialogModuleFragment extends DialogFragment
         }
     }
 
-    public class SubModuleTask extends AsyncTask<Void, Void, Boolean>
+    public class SubProjectTask extends AsyncTask<Void, Void, Boolean>
     {
 
         private final Context _context;
@@ -186,15 +161,16 @@ public class DialogModuleFragment extends DialogFragment
         private final String _scolarYear;
         private final String _codeModule;
         private final String _codeInstance;
+        private final String _codeActi;
 
-        SubModuleTask(Context c, ApiIntra api, String scolarYear, String codeModule, String codeInstance)
+        SubProjectTask(Context c, ApiIntra api, String scolarYear, String codeModule, String codeInstance, String codeActi)
         {
             _context = c;
             _api = api;
-            _module = null;
             _scolarYear = scolarYear;
             _codeInstance = codeInstance;
             _codeModule = codeModule;
+            _codeActi = codeActi;
         }
 
         @Override
@@ -202,7 +178,7 @@ public class DialogModuleFragment extends DialogFragment
         {
             try
             {
-                _api.subModule(_context, _scolarYear, _codeModule, _codeInstance);
+                _api.subProject(_context, _scolarYear, _codeModule, _codeInstance, _codeActi);
                 return true;
             }
             catch (Exception e) {
@@ -237,5 +213,4 @@ public class DialogModuleFragment extends DialogFragment
 
         }
     }
-
 }

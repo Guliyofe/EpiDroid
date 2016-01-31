@@ -6,14 +6,11 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.test.suitebuilder.annotation.LargeTest;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -39,7 +35,6 @@ import java.util.Arrays;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
 
@@ -69,7 +64,6 @@ public class HomeFragment extends Fragment {
      * @param param1 Parameter 1.
      * @return A new instance of fragment HomeFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static HomeFragment newInstance(ApiIntra param1) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
@@ -199,10 +193,8 @@ public class HomeFragment extends Fragment {
         protected void onPostExecute(final Boolean success)
         {
 
-            if (success)
-            {
-                if (isAdded())
-                {
+            if (success) {
+                if (isAdded()) {
                     _loginView.setText(_infos.getInfos().getLogin());
                     _lastNameView.setText(_infos.getInfos().getLastName());
                     _firstNameView.setText(_infos.getInfos().getFirstName());
@@ -211,11 +203,6 @@ public class HomeFragment extends Fragment {
                     GetUserTask userTask = new GetUserTask(_context, _api, _infos.getInfos().getLogin());
                     userTask.execute((Void) null);
                 }
-                return;
-            }
-            else
-            {
-                return;
             }
         }
 
@@ -261,10 +248,8 @@ public class HomeFragment extends Fragment {
         protected void onPostExecute(final Boolean success)
         {
 
-            if (success)
-            {
-                if (isAdded())
-                {
+            if (success) {
+                if (isAdded()) {
                     new ImageLoadTask(_user.getUser().getPicture(), (ImageView) _headerView.findViewById(R.id.photoProfile)).execute();
                     new ImageLoadTask(_user.getUser().getPicture(), _imageProfileView).execute();
                     ((TextView) _headerView.findViewById(R.id.loginProfile)).setText(_user.getUser().getLogin());
@@ -272,11 +257,6 @@ public class HomeFragment extends Fragment {
                     _logView.setText(getString(R.string.log_infos_start) + _user.getNs().getActive());
                     showProgress(false);
                 }
-                return;
-            }
-            else
-            {
-                return;
             }
         }
 
@@ -306,8 +286,7 @@ public class HomeFragment extends Fragment {
                 connection.setDoInput(true);
                 connection.connect();
                 InputStream input = connection.getInputStream();
-                Bitmap myBitmap = BitmapFactory.decodeStream(input);
-                return myBitmap;
+                return BitmapFactory.decodeStream(input);
             } catch (Exception e) {
                 e.printStackTrace();
             }

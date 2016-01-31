@@ -27,9 +27,9 @@ public class planningActivity extends AppCompatActivity {
             for(int i=0; i < jsonArray.length(); i++){
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-                int id = Integer.parseInt(jsonObject.optString("id").toString());
-                String name = jsonObject.optString("name").toString();
-                float salary = Float.parseFloat(jsonObject.optString("salary").toString());
+                int id = Integer.parseInt(jsonObject.optString("id"));
+                String name = jsonObject.optString("name");
+                float salary = Float.parseFloat(jsonObject.optString("salary"));
 
                 data += "Node"+i+" : \n id= "+ id +" \n Name= "+ name +" \n Salary= "+ salary +" \n ";
             }

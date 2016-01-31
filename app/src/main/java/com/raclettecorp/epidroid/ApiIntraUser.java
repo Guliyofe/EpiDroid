@@ -1,7 +1,6 @@
 package com.raclettecorp.epidroid;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ApiIntraUser
@@ -22,7 +21,7 @@ public class ApiIntraUser
         }
         try
         {
-            _ns = new NetsoulStats(new JSONObject(answer.optString("nsstat").toString()));
+            _ns = new NetsoulStats(new JSONObject(answer.optString("nsstat")));
         }
         catch (Exception e) {
             _ns = null;

@@ -15,9 +15,9 @@
             android:icon="@drawable/ic_description_24dp"
             android:title="@string/drawer_modules" />
         <item
-            android:id="@+id/nav_profile"
-            android:icon="@drawable/ic_person_24dp"
-            android:title="@string/drawer_profile" />
+            android:id="@+id/nav_projects"
+            android:icon="@drawable/ic_assignment_24dp"
+            android:title="@string/drawer_projects" />
         <item
             android:id="@+id/nav_trombi"
             android:icon="@drawable/ic_people_24dp"

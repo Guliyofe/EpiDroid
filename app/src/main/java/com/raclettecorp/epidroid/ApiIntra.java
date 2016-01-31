@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -73,7 +72,7 @@ public class ApiIntra implements Serializable
             if (con.getResponseCode() == 200)
             {
                 JSONObject jsonRootObject = new JSONObject(outputString);
-                mToken = jsonRootObject.optString("token").toString();
+                mToken = jsonRootObject.optString("token");
                 return mToken;
             }
             else
@@ -110,8 +109,6 @@ public class ApiIntra implements Serializable
             String lol;
             while ((lol = input.readLine()) != null)
                 answer += lol;
-            /*for( int c = input.read(); c != -1; c = input.read() )
-                answer += (char) c;*/
             input.close();
             if (con.getResponseCode() == 200) {
                 ApiIntraInfos infos = new ApiIntraInfos(new JSONObject((answer)));
@@ -142,13 +139,10 @@ public class ApiIntra implements Serializable
             String lol;
             while ((lol = input.readLine()) != null)
                 answer += lol;
-            /*for( int c = input.read(); c != -1; c = input.read() )
-                answer += (char) c;*/
             input.close();
 
             if (con.getResponseCode() == 200) {
-                ApiIntraUser user = new ApiIntraUser(new JSONObject((answer)));
-                return user;
+                return new ApiIntraUser(new JSONObject((answer)));
             }
         }
         catch( Exception e)
@@ -172,13 +166,10 @@ public class ApiIntra implements Serializable
             String lol;
             while ((lol = input.readLine()) != null)
                 answer += lol;
-            /*for( int c = input.read(); c != -1; c = input.read() )
-                answer += (char) c;*/
             input.close();
             if (con.getResponseCode() == 200)
             {
-                ApiIntraModules modules = new ApiIntraModules(new JSONObject((answer)));
-                return modules;
+               return new ApiIntraModules(new JSONObject((answer)));
             }
         }
         catch( Exception e)
@@ -187,6 +178,146 @@ public class ApiIntra implements Serializable
             return null;
         }
         return null;
+    }
+
+    public ApiIntraProjects requestProjects(Context context)
+    {
+        try
+        {
+            URL obj = new URL(context.getString(R.string.http_projects) + "?" + context.getString(R.string.string_token) + context.getString(R.string.string_equal) + mToken);
+            HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+            con.setDoInput(true);
+
+            DataInputStream input = new DataInputStream( con.getInputStream() );
+            String answer = context.getString(R.string.string_empty);
+            String lol;
+            while ((lol = input.readLine()) != null)
+                answer += lol;
+            input.close();
+            if (con.getResponseCode() == 200)
+            {
+                return new ApiIntraProjects(new JSONArray((answer)));
+            }
+        }
+        catch( Exception e)
+        {
+            Log.d(context.getString(R.string.app_name), e.toString());
+            return null;
+        }
+        return null;
+    }
+
+    public ApiIntraProject requestProject(Context context, String scolarYear, String codeModule, String codeInstance, String codeActi)
+    {
+        try
+        {
+            URL obj = new URL(context.getString(R.string.http_project) + "?" + context.getString(R.string.string_token) + context.getString(R.string.string_equal) + mToken
+                    + context.getString(R.string.string_esper) + context.getString(R.string.string_scolar_year) + context.getString(R.string.string_equal) + scolarYear
+                    + context.getString(R.string.string_esper) + context.getString(R.string.string_code_module) + context.getString(R.string.string_equal) + codeModule
+                    + context.getString(R.string.string_esper) + context.getString(R.string.string_code_instance) + context.getString(R.string.string_equal) + codeInstance
+                    + context.getString(R.string.string_esper) + context.getString(R.string.string_code_acti) + context.getString(R.string.string_equal) + codeActi);
+            HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+            con.setDoInput(true);
+
+            DataInputStream input = new DataInputStream( con.getInputStream() );
+            String answer = context.getString(R.string.string_empty);
+            String lol;
+            while ((lol = input.readLine()) != null)
+                answer += lol;
+            input.close();
+            if (con.getResponseCode() == 200)
+            {
+                return new ApiIntraProject(new JSONObject((answer)));
+            }
+        }
+        catch( Exception e)
+        {
+            Log.d(context.getString(R.string.app_name), e.toString());
+            return null;
+        }
+        return null;
+    }
+
+    public Boolean unsubProject(Context context, String scolarYear, String codeModule, String codeInstance, String codeActi)
+    {
+        try
+        {
+            URL obj = new URL(context.getString(R.string.http_project));
+            HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+            con.setRequestMethod(context.getString(R.string.request_delete));
+            con.setRequestProperty(context.getString(R.string.string_token), mToken);
+            con.setRequestProperty(context.getString(R.string.string_scolar_year), scolarYear);
+            con.setRequestProperty(context.getString(R.string.string_code_module), codeModule);
+            con.setRequestProperty(context.getString(R.string.string_code_instance), codeInstance);
+            con.setRequestProperty(context.getString(R.string.string_code_acti), codeActi);
+            con.setDoOutput(true);
+            con.setDoInput(true);
+
+            DataOutputStream output = new DataOutputStream(con.getOutputStream());
+            output.writeBytes(context.getString(R.string.string_token) + context.getString(R.string.string_equal) + mToken
+                    + context.getString(R.string.string_esper) + context.getString(R.string.string_scolar_year) + context.getString(R.string.string_equal) + scolarYear
+                    + context.getString(R.string.string_esper) + context.getString(R.string.string_code_module) + context.getString(R.string.string_equal) + codeModule
+                    + context.getString(R.string.string_esper) + context.getString(R.string.string_code_instance) + context.getString(R.string.string_equal) + codeInstance
+                    + context.getString(R.string.string_esper) + context.getString(R.string.string_code_acti) + context.getString(R.string.string_equal) + codeActi);
+            output.close();
+
+            DataInputStream input = new DataInputStream( con.getInputStream() );
+
+            String answer = context.getString(R.string.string_empty);
+            for( int c = input.read(); c != -1; c = input.read() )
+                answer += (char) c;
+            input.close();
+            if (con.getResponseCode() == 200) {
+                return true;
+            }
+        }
+        catch( Exception e)
+        {
+            Log.d(context.getString(R.string.app_name), e.toString());
+            return false;
+        }
+        return false;
+    }
+
+    public Boolean subProject(Context context, String scolarYear, String codeModule, String codeInstance, String codeActi)
+    {
+        try
+        {
+            URL obj = new URL(context.getString(R.string.http_project));
+            HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+            con.setRequestMethod(context.getString(R.string.request_post));
+            con.setRequestProperty(context.getString(R.string.string_token), mToken);
+            con.setRequestProperty(context.getString(R.string.string_scolar_year), scolarYear);
+            con.setRequestProperty(context.getString(R.string.string_code_module), codeModule);
+            con.setRequestProperty(context.getString(R.string.string_code_instance), codeInstance);
+            con.setRequestProperty(context.getString(R.string.string_code_acti), codeActi);
+            con.setDoOutput(true);
+            con.setDoInput(true);
+
+            DataOutputStream output = new DataOutputStream(con.getOutputStream());
+            output.writeBytes(context.getString(R.string.string_token) + context.getString(R.string.string_equal) + mToken
+                    + context.getString(R.string.string_esper) + context.getString(R.string.string_scolar_year) + context.getString(R.string.string_equal) + scolarYear
+                    + context.getString(R.string.string_esper) + context.getString(R.string.string_code_module) + context.getString(R.string.string_equal) + codeModule
+                    + context.getString(R.string.string_esper) + context.getString(R.string.string_code_instance) + context.getString(R.string.string_equal) + codeInstance
+                    + context.getString(R.string.string_esper) + context.getString(R.string.string_code_acti) + context.getString(R.string.string_equal) + codeActi);
+            output.close();
+
+            DataInputStream input = new DataInputStream( con.getInputStream() );
+
+            String answer = context.getString(R.string.string_empty);
+            for( int c = input.read(); c != -1; c = input.read() )
+                answer += (char) c;
+            input.close();
+            if (con.getResponseCode() == 200) {
+                return true;
+            }
+        }
+        catch( Exception e)
+        {
+            Log.d(context.getString(R.string.app_name), e.toString());
+            return false;
+        }
+        return false;
     }
 
     public ApiIntraModule requestModule(Context context, String scolarYear, String codeModule, String codeInstance, String grade)
@@ -205,8 +336,6 @@ public class ApiIntra implements Serializable
             String lol;
             while ((lol = input.readLine()) != null)
                 answer += lol;
-            /*for( int c = input.read(); c != -1; c = input.read() )
-                answer += (char) c;*/
             input.close();
             if (con.getResponseCode() == 200)
             {
@@ -230,6 +359,45 @@ public class ApiIntra implements Serializable
             URL obj = new URL(context.getString(R.string.http_module));
             HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
             con.setRequestMethod(context.getString(R.string.request_delete));
+            con.setRequestProperty(context.getString(R.string.string_token), mToken);
+            con.setRequestProperty(context.getString(R.string.string_scolar_year), scolarYear);
+            con.setRequestProperty(context.getString(R.string.string_code_module), codeModule);
+            con.setRequestProperty(context.getString(R.string.string_code_instance), codeInstance);
+            con.setDoOutput(true);
+            con.setDoInput(true);
+
+            DataOutputStream output = new DataOutputStream(con.getOutputStream());
+            output.writeBytes(context.getString(R.string.string_token) + context.getString(R.string.string_equal) + mToken
+                    + context.getString(R.string.string_esper) + context.getString(R.string.string_scolar_year) + context.getString(R.string.string_equal) + scolarYear
+                    + context.getString(R.string.string_esper) + context.getString(R.string.string_code_module) + context.getString(R.string.string_equal) + codeModule
+                    + context.getString(R.string.string_esper) + context.getString(R.string.string_code_instance) + context.getString(R.string.string_equal) + codeInstance);
+            output.close();
+
+            DataInputStream input = new DataInputStream( con.getInputStream() );
+
+            String answer = context.getString(R.string.string_empty);
+            for( int c = input.read(); c != -1; c = input.read() )
+                answer += (char) c;
+            input.close();
+            if (con.getResponseCode() == 200) {
+                return true;
+            }
+        }
+        catch( Exception e)
+        {
+            Log.d(context.getString(R.string.app_name), e.toString());
+            return false;
+        }
+        return false;
+    }
+
+    public Boolean subModule(Context context, String scolarYear, String codeModule, String codeInstance)
+    {
+        try
+        {
+            URL obj = new URL(context.getString(R.string.http_module));
+            HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+            con.setRequestMethod(context.getString(R.string.request_post));
             con.setRequestProperty(context.getString(R.string.string_token), mToken);
             con.setRequestProperty(context.getString(R.string.string_scolar_year), scolarYear);
             con.setRequestProperty(context.getString(R.string.string_code_module), codeModule);

@@ -27,8 +27,8 @@ public class ModuleAdapter extends ArrayAdapter<Module>
         ModuleViewHolder viewHolder = (ModuleViewHolder) convertView.getTag();
         if(viewHolder == null){
             viewHolder = new ModuleViewHolder();
-            viewHolder.title = (TextView) convertView.findViewById(R.id.textTitleViewModules);
-            viewHolder.module = (TextView) convertView.findViewById(R.id.textModuleViewModules);
+            viewHolder.title = (TextView) convertView.findViewById(R.id.textTitleViewProjects);
+            viewHolder.module = (TextView) convertView.findViewById(R.id.textModuleViewProjects);
             viewHolder.grade = (TextView) convertView.findViewById(R.id.textGradeViewModules);
             viewHolder.year = (TextView) convertView.findViewById(R.id.textYearViewModules);
             viewHolder.date = (TextView) convertView.findViewById(R.id.textDateViewModules);
