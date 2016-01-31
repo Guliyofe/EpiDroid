@@ -142,7 +142,6 @@ public class ApiIntra implements Serializable
 
             if (con.getResponseCode() == 200) {
                 ApiIntraUser user = new ApiIntraUser(new JSONObject((answer)));
-                Log.d(context.getString(R.string.app_name), "lol : " + user.getUser().getCredits());
                 return user;
             }
         }
@@ -158,7 +157,6 @@ public class ApiIntra implements Serializable
     {
         try
         {
-            Log.d("EpiDroid" , "start modules");
             URL obj = new URL(context.getString(R.string.http_modules) + "?" + context.getString(R.string.string_token) + context.getString(R.string.string_equal) + mToken);
             HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
             con.setDoInput(true);
@@ -171,8 +169,38 @@ public class ApiIntra implements Serializable
             if (con.getResponseCode() == 200)
             {
                 ApiIntraModules modules = new ApiIntraModules(new JSONObject((answer)));
-                Log.d(context.getString(R.string.app_name), "Modules : " + modules.getModules()[0].getGrade());
                 return modules;
+            }
+        }
+        catch( Exception e)
+        {
+            Log.d(context.getString(R.string.app_name), e.toString());
+            return null;
+        }
+        return null;
+    }
+
+    public ApiIntraModule requestModule(Context context, String scolarYear, String codeModule, String codeInstance, String grade)
+    {
+        try
+        {
+            URL obj = new URL(context.getString(R.string.http_module) + "?" + context.getString(R.string.string_token) + context.getString(R.string.string_equal) + mToken
+            + context.getString(R.string.string_esper) + context.getString(R.string.string_scolar_year) + context.getString(R.string.string_equal) + scolarYear
+                    + context.getString(R.string.string_esper) + context.getString(R.string.string_code_module) + context.getString(R.string.string_equal) + codeModule
+                    + context.getString(R.string.string_esper) + context.getString(R.string.string_code_instance) + context.getString(R.string.string_equal) + codeInstance);
+            HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+            con.setDoInput(true);
+
+            DataInputStream input = new DataInputStream( con.getInputStream() );
+            String answer = context.getString(R.string.string_empty);
+            for( int c = input.read(); c != -1; c = input.read() )
+                answer += (char) c;
+            input.close();
+            if (con.getResponseCode() == 200)
+            {
+                ApiIntraModule module = new ApiIntraModule(new JSONObject((answer)), grade);
+                Log.d(context.getString(R.string.app_name), "Module : " + module.getDescription());
+                return module;
             }
         }
         catch( Exception e)

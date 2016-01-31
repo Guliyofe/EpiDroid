@@ -67,8 +67,18 @@
     <string name="http_user">https://epitech-api.herokuapp.com/user</string>
     <string name="string_user">user</string>
 
-    <!-- Related to Susie -->
+    <!-- Related to Modules -->
     <string name="http_modules">https://epitech-api.herokuapp.com/modules</string>
+
+    <!-- Related to Module -->
+    <string name="http_module">https://epitech-api.herokuapp.com/module</string>
+    <string name="string_scolar_year">scolaryear</string>
+    <string name="string_code_module">codemodule</string>
+    <string name="string_code_instance">codeinstance</string>
+    <string name="string_begin_module">Begin : </string>
+    <string name="string_end_module">End : </string>
+    <string name="string_end_register_module">End register : </string>
+
 
     <!-- Related to Susie -->
     <string name="http_susie">https://epitech-api.herokuapp.com/susie</string>

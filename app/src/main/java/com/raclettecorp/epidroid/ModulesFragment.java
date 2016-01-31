@@ -3,17 +3,21 @@ package com.raclettecorp.epidroid;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -82,6 +86,25 @@ public class ModulesFragment extends Fragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         _modulesView = (ListView) getView().findViewById(R.id.listModulesView);
+        _modulesView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3)
+            {
+                Module module = (Module) _modulesView.getItemAtPosition(position);
+                showProgressOneModule(true);
+                new GetModuleTask(getActivity(), mParam1, String.valueOf(module.getScholarYear()), module.getCodeModule(), module.getCodeInstance(), module.getGrade()).execute();
+
+                /*Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                String shareBody = "I've got an " + module.getGrade() + " in " + module.getTitle();
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Hi, want to see my grade ?");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                startActivity(Intent.createChooser(sharingIntent, "Share via"));*/
+
+            }
+
+        });
         _progressView = getView().findViewById(R.id.progressModulesBar);
         new GetModulesTask(getActivity(), mParam1).execute();
         showProgress(true);
@@ -113,6 +136,32 @@ public class ModulesFragment extends Fragment
             // and hide the relevant UI components.
             _progressView.setVisibility(show ? View.VISIBLE : View.GONE);
             _modulesView.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgressOneModule(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2)
+        {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            _progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            _progressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    _progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        }
+        else
+        {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            _progressView.setVisibility(show ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -189,4 +238,70 @@ public class ModulesFragment extends Fragment
         }
     }
 
+    public class GetModuleTask extends AsyncTask<Void, Void, Boolean>
+    {
+
+        private final Context _context;
+        private final ApiIntra _api;
+        private final String _scolarYear;
+        private final String _codeModule;
+        private final String _codeInstance;
+        private final String _grade;
+        private ApiIntraModule _module;
+
+        GetModuleTask(Context c, ApiIntra api, String scolarYear, String codeModule, String codeInstance, String grade)
+        {
+            _context = c;
+            _api = api;
+            _module = null;
+            _scolarYear = scolarYear;
+            _codeInstance = codeInstance;
+            _codeModule = codeModule;
+            _grade = grade;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params)
+        {
+            try
+            {
+                if ((_module = _api.requestModule(_context, _scolarYear, _codeModule, _codeInstance, _grade)) == null)
+                    return false;
+            }
+            catch (Exception e) {
+                Log.d(getString(R.string.app_name), e.toString());
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success)
+        {
+
+            if (success)
+            {
+                if (isAdded())
+                {
+                    DialogModuleFragment dialogModule = new DialogModuleFragment().newInstance(_module);
+                    //FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                    dialogModule.show(getActivity().getSupportFragmentManager(), "fuckYou");
+                    /*ModuleAdapter moduleAdapter = new ModuleAdapter(getActivity(), Arrays.asList(_modules.getModules()));
+                    _modulesView.setAdapter(moduleAdapter);*/
+                    showProgressOneModule(false);
+                }
+                return;
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        @Override
+        protected void onCancelled()
+        {
+
+        }
+    }
 }
